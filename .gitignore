@@ -70,3 +70,11 @@ yarn-error.log
 
 .firebase/
 image-cache/
+
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
