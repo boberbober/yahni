@@ -1,6 +1,10 @@
 
 import React from 'react'
 
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
+
 import firebase from 'firebase/app'
 import 'firebase/database'
 
@@ -14,7 +18,7 @@ if (!firebase.apps.length) {
 }
 
 
-function HomePage() {
+export default function HomePage() {
 
 	const [stories, setStories] = React.useState([])
 
@@ -39,10 +43,37 @@ function HomePage() {
 		
 		<button onClick={handleFetch}>fetch</button>
 
+		<ul>
+			{ stories.map(story =>
+				<Story key={story.id} data={story} />
+			)}
+		</ul>
+
 		<pre>{ JSON.stringify(stories, null, 2) }</pre>
 		
 	</div>
 }
 
-export default HomePage
 
+function Story({ data }) {
+
+	return <li>
+
+		[{ data.score }]
+
+		<a href={data.url}>
+			{ data.title }
+		</a>
+
+		<br />
+
+		by { data.by } -  
+		
+		{ dayjs.unix(data.time).fromNow() } - 
+		
+		{ data.descendants } comments - 
+		
+		{ data.url }
+
+	</li>
+}
