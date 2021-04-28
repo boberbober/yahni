@@ -7,6 +7,11 @@ export const topStoriesAtom = atom({
 	default: []
 })
 
+export const dbConnectedAtom = atom({
+	key: `dbConnected`,
+	default: false
+})
+
 // export const filteredProductsAtom = selector({
 // 	key: 'filteredProducts',
 // 	get: ({ get }) => {

@@ -1,50 +1,32 @@
 
 import React from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-dayjs.extend(relativeTime)
-
-import useFirebase from '../helpers/useFirebase'
-import { topStoriesAtom } from '../atoms'
+import { topStoriesAtom, dbConnectedAtom } from '../utils/atoms'
 import Story from '../components/Story'
+import { FirebaseContext } from '../utils/firebase'
+
 
 export default function HomePage() {
 
-	const [dbConnected, db] = useFirebase()
+	const dbConnected = useRecoilValue(dbConnectedAtom)
+	const db = React.useContext(FirebaseContext)
 	const [isFetching, setFetching] = React.useState(null) 
 	const [stories, setStories] = useRecoilState(topStoriesAtom)
 
-
 	const handleFetch = async () => {
-		
 		console.log('fetch')
 		setFetching(true)
 		const snap = await db.child('/topstories').once('value')
-
-		// const allItems = 
-		// const items = allItems.slice(0, 10)
-		// const stories = []
-
-		// for (const id of items) {
-		// 	console.log(id)
-		// 	const snap = await db.child(`item/${id}`).get()
-		// 	stories.push(snap.val())
-		// }
 		setStories(snap.val())
 		setFetching(false)
 	}
 
-
 	React.useEffect(() => {
-		if (dbConnected) {
-			handleFetch()
-		}
+		if (dbConnected) handleFetch()
 	}, [dbConnected])
 
 	const someStories = stories.slice(0, 10)
-
 
 	return <div>
 
@@ -56,11 +38,10 @@ export default function HomePage() {
 			<p>Fetching stories...</p> }
 
 		<ul>
-			{ someStories.map(id => <Story key={id} id={id} />
+			{ someStories.map(id => 
+				<Story key={id} id={id} />
 			)}
 		</ul>
 
-		{/* <pre>{ JSON.stringify(stories, null, 2) }</pre> */}
-		
 	</div>
 }
