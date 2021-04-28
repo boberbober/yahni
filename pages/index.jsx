@@ -1,79 +1,66 @@
 
 import React from 'react'
+import { useRecoilState } from 'recoil'
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
-import firebase from 'firebase/app'
-import 'firebase/database'
-
-let db
-
-if (!firebase.apps.length) {
-	firebase.initializeApp({
-		databaseURL: 'https://hacker-news.firebaseio.com'
-	})
-	db = firebase.database().ref('/v0')
-}
-
+import useFirebase from '../helpers/useFirebase'
+import { topStoriesAtom } from '../atoms'
+import Story from '../components/Story'
 
 export default function HomePage() {
 
-	const [stories, setStories] = React.useState([])
+	const [dbConnected, db] = useFirebase()
+	const [isFetching, setFetching] = React.useState(null) 
+	const [stories, setStories] = useRecoilState(topStoriesAtom)
+
 
 	const handleFetch = async () => {
 		
 		console.log('fetch')
+		setFetching(true)
 		const snap = await db.child('/topstories').once('value')
 
-		const allItems = snap.val()
-		const items = allItems.slice(0, 10)
-		const stories = []
+		// const allItems = 
+		// const items = allItems.slice(0, 10)
+		// const stories = []
 
-		for (const id of items) {
-			console.log(id)
-			const snap = await db.child(`item/${id}`).get()
-			stories.push(snap.val())
-		}
-		setStories(stories)
+		// for (const id of items) {
+		// 	console.log(id)
+		// 	const snap = await db.child(`item/${id}`).get()
+		// 	stories.push(snap.val())
+		// }
+		setStories(snap.val())
+		setFetching(false)
 	}
 
+
+	React.useEffect(() => {
+		if (dbConnected) {
+			handleFetch()
+		}
+	}, [dbConnected])
+
+	const someStories = stories.slice(0, 10)
+
+
 	return <div>
-		
+
+		<p>{ dbConnected ? 'connected' : 'not connected' }</p>
+
 		<button onClick={handleFetch}>fetch</button>
 
+		{ isFetching &&
+			<p>Fetching stories...</p> }
+
 		<ul>
-			{ stories.map(story =>
-				<Story key={story.id} data={story} />
+			{ someStories.map(id => <Story key={id} id={id} />
 			)}
 		</ul>
 
-		<pre>{ JSON.stringify(stories, null, 2) }</pre>
+		{/* <pre>{ JSON.stringify(stories, null, 2) }</pre> */}
 		
 	</div>
-}
-
-
-function Story({ data }) {
-
-	return <li>
-
-		[{ data.score }]
-
-		<a href={data.url}>
-			{ data.title }
-		</a>
-
-		<br />
-
-		by { data.by } -  
-		
-		{ dayjs.unix(data.time).fromNow() } - 
-		
-		{ data.descendants } comments - 
-		
-		{ data.url }
-
-	</li>
 }
