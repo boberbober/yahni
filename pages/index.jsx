@@ -4,13 +4,12 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 
 import { topStoriesAtom, dbConnectedAtom } from '../utils/atoms'
 import Story from '../components/Story'
-import { FirebaseContext } from '../utils/firebase'
+import { db } from '../utils/firebase'
 
 
 export default function HomePage() {
 
 	const dbConnected = useRecoilValue(dbConnectedAtom)
-	const db = React.useContext(FirebaseContext)
 	const [isFetching, setFetching] = React.useState(null) 
 	const [stories, setStories] = useRecoilState(topStoriesAtom)
 
