@@ -1,11 +1,12 @@
 
 import React from 'react'
-import { selectorFamily, useRecoilValueLoadable, useRecoilValue } from 'recoil'
+import { selectorFamily, useRecoilValue, useRecoilValueLoadable } from 'recoil'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
 import { db } from '../utils/firebase'
+import { lastMaxItemSelector } from '../utils/atoms'
 
 
 const storyItemSelector = selectorFamily({
@@ -26,6 +27,7 @@ const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 
 export default function Story({ id }) {
 
+	// const lastMaxItem = useRecoilValue(lastMaxItemSelector)
 	const loadable = useRecoilValueLoadable(storyItemSelector(id))
 	
 	if (loadable.state === 'loading')

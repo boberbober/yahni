@@ -3,7 +3,7 @@ import React from 'react'
 import { useRecoilValue } from 'recoil'
 
 import { dbConnectedAtom } from '../utils/atoms'
-import NavLink from '../utils/NavLink'
+import NavLink from './NavLink'
 
 
 const pages = [
@@ -19,6 +19,8 @@ const pages = [
 export default function Stories({ type }) {
 
 	const dbConnected = useRecoilValue(dbConnectedAtom)
+
+
 
 	return <header>
 		

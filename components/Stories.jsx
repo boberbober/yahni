@@ -2,12 +2,19 @@
 import React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 
-import { storiesAtom, dbConnectedAtom, orderAtom, orderedStoriesSelector } from '../utils/atoms'
 import Story from '../components/Story'
 import { db } from '../utils/firebase'
 
+import { 
+	storiesAtom, 
+	dbConnectedAtom, 
+	orderAtom, 
+	orderedStoriesSelector, 
+	lastMaxItemSelector 
+} from '../utils/atoms'
 
 const STORIESPERPAGE = 25
+
 
 export default function Stories({ type }) {
 
@@ -19,6 +26,7 @@ export default function Stories({ type }) {
 	const storiesLen = stories.length
 	const [latestOrder, setLatestOrder] = useRecoilState(orderAtom)
 	const orderedStories = useRecoilValue(orderedStoriesSelector(type))
+	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
 
 	const handleFetch = async () => {
 		console.log('fetch')
