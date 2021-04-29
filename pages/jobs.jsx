@@ -1,7 +1,9 @@
 
 import React from 'react'
 
-export default function Jobs() {
+import Stories from '../components/Stories'
 
-	return <div>Jobs</div>
+
+export default function JobsStories() {
+	return <Stories type='job' />
 }

@@ -7,6 +7,11 @@ export const topStoriesAtom = atom({
 	default: []
 })
 
+export const storiesAtom = atomFamily({
+	key: 'stories',
+	default: []
+})
+
 export const dbConnectedAtom = atom({
 	key: `dbConnected`,
 	default: false

@@ -16,35 +16,44 @@ const storyItemSelector = selectorFamily({
 	}
 })
 
+const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
+
 
 function StoryDetails({ id }) {
+
 	const data = useRecoilValue(storyItemSelector(id))
-	// return JSON.stringify(data)
+
 	return <>
-	
-		[{ data.score }]
 
-		<a href={data.url}>
-			{ data.title }
-		</a>
+		<a href={data.url ?? `https://news.ycombinator.com/item?id=${id}`} className='sLink'>
+			<span className='sTitle'>{ data.title }</span>
+			{ data.url &&
+				<small className='sUrl'>{ cleanUrl(data.url) }</small> }
+		</a>	
 
-		<br />
+		<span className='sScore'>
+			{ data.score }
+		</span>
 
-		by { data.by } -  
+		<span className='sComments'>
+			{ data.descendants }
+		</span>
+
+		<p className='sSub'>
+			<span className='sDate'>
+				{ dayjs.unix(data.time).fromNow() }
+			</span> by <span className='sBy'>
+				{ data.by }
+			</span>
+		</p>
 		
-		{ dayjs.unix(data.time).fromNow() } - 
-		
-		{ data.descendants } comments - 
-		
-		{ data.url }
-
 	</>
 }
 
 
 export default function Story({ id }) {
 
-	return <li>
+	return <li className='story'>
 
 		<React.Suspense fallback={id}>
 			<StoryDetails id={id} />

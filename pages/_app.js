@@ -1,27 +1,21 @@
 
 import React from 'react'
 import { RecoilRoot } from 'recoil'
-import Link from 'next/link'
 
 import { FirebaseProvider } from '../utils/firebase'
+import Header from '../components/Header'
 
+import '../styles/layout.sass'
+import '../styles/stories.sass'
 
 export default function AppWrap({ Component, pageProps }) {
 
 	return <RecoilRoot>
 
 		<FirebaseProvider />
-	
-		<nav>
-			YAHNI / 
-			<Link href='/'>Top</Link> / 
-			<Link href='/best'>Best</Link> / 
-			<Link href='/new'>New</Link> / 
-			<Link href='/ask'>Ask</Link> / 
-			<Link href='/jobs'>Show</Link> / 
-			<Link href='/jobs'>Jobs</Link>
-		</nav>
 
+		<Header />
+		
 		<Component {...pageProps} />
 
 	</RecoilRoot>
