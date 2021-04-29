@@ -1,6 +1,24 @@
 
 body
 	margin: 0 1em 2em 1em
+	font-family: sans-serif
 
-.navLink.selected
-	background: gold
+a
+	text-decoration: none
+	&:hover
+		text-decoration: underline
+
+header
+	display: flex
+	margin: 1em 0
+
+#logo
+	margin-right: 1em
+
+nav
+	display: flex
+
+.navLink
+	margin-right: 1em
+	&.selected
+		background: gold

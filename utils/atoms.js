@@ -1,10 +1,19 @@
 
-import { atom, selector, DefaultValue, atomFamily } from 'recoil'
+import { atom, selector, DefaultValue, selectorFamily, atomFamily } from 'recoil'
 
+// export const topStoriesAtom = atom({
+// 	key: `topStories`,
+// 	default: []
+// })
 
-export const topStoriesAtom = atom({
-	key: `topStories`,
-	default: []
+export const dbConnectedAtom = atom({
+	key: `dbConnected`,
+	default: false
+})
+
+export const orderAtom = atom({
+	key: 'order',
+	default: false,
 })
 
 export const storiesAtom = atomFamily({
@@ -12,10 +21,18 @@ export const storiesAtom = atomFamily({
 	default: []
 })
 
-export const dbConnectedAtom = atom({
-	key: `dbConnected`,
-	default: false
+export const orderedStoriesSelector = selectorFamily({
+	key: 'orderedStories',
+	default: [],
+	get: type => ({ get }) => {
+		const stories = get(storiesAtom(type))
+		const latestOrder = get(orderAtom)
+		if (!latestOrder)
+			return stories
+		return stories.slice().sort((a, b) => b - a)
+	}
 })
+
 
 // export const filteredProductsAtom = selector({
 // 	key: 'filteredProducts',

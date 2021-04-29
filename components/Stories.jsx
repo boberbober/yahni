@@ -2,12 +2,12 @@
 import React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 
-import { storiesAtom, dbConnectedAtom } from '../utils/atoms'
+import { storiesAtom, dbConnectedAtom, orderAtom, orderedStoriesSelector } from '../utils/atoms'
 import Story from '../components/Story'
 import { db } from '../utils/firebase'
 
 
-const STORIESPERPAGE = 10
+const STORIESPERPAGE = 25
 
 export default function Stories({ type }) {
 
@@ -16,6 +16,9 @@ export default function Stories({ type }) {
 	const [stories, setStories] = useRecoilState(storiesAtom(type))
 	const [start, setStart] = React.useState(0)
 	const [end, setEnd] = React.useState(STORIESPERPAGE)
+	const storiesLen = stories.length
+	const [latestOrder, setLatestOrder] = useRecoilState(orderAtom)
+	const orderedStories = useRecoilValue(orderedStoriesSelector(type))
 
 	const handleFetch = async () => {
 		console.log('fetch')
@@ -30,16 +33,28 @@ export default function Stories({ type }) {
 		setEnd(prev => prev + STORIESPERPAGE)
 	}
 
+	const handleOrder = event => {
+		setLatestOrder(event.target.checked)
+	}
+
 	React.useEffect(() => {
-		if (dbConnected) handleFetch()
+		if (dbConnected && !!db)
+			handleFetch()
 	}, [dbConnected])
 
+	// const someStories = stories.slice(start, end)
+	const someStories = orderedStories.slice(start, end)
 
-	const someStories = stories.slice(start, end)
-
-	return <div>
+	return <main>
 
 		{/* { isFetching && <p>Fetching stories...</p> } */}
+
+		<label>
+			<input type='checkbox'
+				onChange={handleOrder}
+				checked={latestOrder}
+			/> order by latest
+		</label>
 
 		<ul id='Stories'>
 			{ someStories.map(id => 
@@ -47,7 +62,13 @@ export default function Stories({ type }) {
 			)}
 		</ul>
 
-		<button onClick={handleMore}>More</button> ({ start } - { end })
+		{ (storiesLen > 0 && end < storiesLen) &&
+			<button onClick={handleMore}>More ({ start } - { end } / {storiesLen})</button> }
 
-	</div>
+		{ (storiesLen > 0 && end >= storiesLen) &&
+			<p>end.</p> }
+
+		{/* <pre>{ JSON.stringify(someStories, null, 2) }</pre> */}
+
+	</main>
 }

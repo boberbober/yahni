@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { selectorFamily, useRecoilValue } from 'recoil'
+import { selectorFamily, useRecoilValueLoadable, useRecoilValue } from 'recoil'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
@@ -11,53 +11,61 @@ import { db } from '../utils/firebase'
 const storyItemSelector = selectorFamily({
 	key: 'storyItem',
 	get: storyId => async () => {
-		const snap = await db.child(`item/${storyId}`).get()
-		return snap.val()
+		try {
+			const snap = await db.child(`item/${storyId}`).get()
+			return snap.val()
+		} catch (error) {
+			console.error(error)
+			return null
+		}
 	}
 })
 
 const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 
 
-function StoryDetails({ id }) {
+export default function Story({ id }) {
 
-	const data = useRecoilValue(storyItemSelector(id))
+	const loadable = useRecoilValueLoadable(storyItemSelector(id))
+	
+	if (loadable.state === 'loading')
+		return <li>loading #{ id }</li>
 
-	return <>
+	if (loadable.state === 'hasError')
+		return <li>error</li>
 
-		<a href={data.url ?? `https://news.ycombinator.com/item?id=${id}`} className='sLink'>
-			<span className='sTitle'>{ data.title }</span>
-			{ data.url &&
-				<small className='sUrl'>{ cleanUrl(data.url) }</small> }
-		</a>	
+	const story = loadable.contents  
 
-		<span className='sScore'>
-			{ data.score }
-		</span>
+	if (!story) 
+		return null
 
-		<span className='sComments'>
-			{ data.descendants }
-		</span>
+	return <li className={`story s-${story.type}`}>
+
+		<a href={story.url ?? `https://news.ycombinator.com/item?id=${id}`} className='sLink'>
+			<span className='sTitle'>{ story.title }</span>
+			{ story.url &&
+				<small className='sUrl'>{ cleanUrl(story.url) }</small> }
+		</a>
+
+		{ story.type !== 'job' &&  <>
+
+			<span className='sScore'>
+				{ story.score }
+			</span>
+
+			<span className='sComments'>
+				{ story.descendants }
+			</span>
+
+		</>}
 
 		<p className='sSub'>
 			<span className='sDate'>
-				{ dayjs.unix(data.time).fromNow() }
+				{ dayjs.unix(story.time).fromNow() }
 			</span> by <span className='sBy'>
-				{ data.by }
+				{ story.by }
 			</span>
 		</p>
-		
-	</>
-}
-
-
-export default function Story({ id }) {
-
-	return <li className='story'>
-
-		<React.Suspense fallback={id}>
-			<StoryDetails id={id} />
-		</React.Suspense>
 
 	</li>
 }

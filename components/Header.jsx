@@ -21,22 +21,16 @@ export default function Stories({ type }) {
 	const dbConnected = useRecoilValue(dbConnectedAtom)
 
 	return <header>
+		
+			<span id='logo'>YAHNI</span>
 
-		<nav>
-
-			YAHNI
-
-			<ul>
+			<nav>
 				{ pages.map(([label, url]) =>
-					<li key={label}>
-						<NavLink href={`/${url}`}>
-							<a>{label}</a>
-						</NavLink>
-					</li>
+					<NavLink href={`/${url}`} key={label}>
+						<a>{label}</a>
+					</NavLink>
 				)} 
-			</ul>
-
-		</nav>
+			</nav>
 
 		{ dbConnected ? 'connected' : 'not connected' }
 
