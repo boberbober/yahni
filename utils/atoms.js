@@ -34,7 +34,20 @@ export const storyItemSelector = selectorFamily({
 			console.log('loadable story', snap.val())
 			return snap.val()
 		} catch (error) {
-			console.error(error)
+			console.warn(error)
+			return null
+		}
+	}
+})
+
+export const commentSelector = selectorFamily({
+	key: 'comment',
+	get: id => async () => {
+		try {
+			const snap = await db.child(`item/${id}`).get()
+			return snap.val()
+		} catch (error) {
+			console.warn(error)
 			return null
 		}
 	}

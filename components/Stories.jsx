@@ -53,11 +53,11 @@ export default function Stories({ type }) {
 	const handleUpdate = React.useCallback(snap => {
 		const stories = snap.val()
 		console.log('update', stories.slice(0,5))
-		setTimeout(() => {
-			console.log('setStories')
-			setStories(stories)
-			setLastUpdate(Date.now())
-		}, !lastUpdate ? 1 : 10000)
+		setStories(stories)
+		setLastUpdate(Date.now())
+		// setTimeout(() => {
+		// 	console.log('setStories')
+		// }, !lastUpdate ? 1 : 10000)
 	}, [dbConnected])
 
 	React.useEffect(() => {

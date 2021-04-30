@@ -8,7 +8,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
 import { lastMaxItemSelector, openStoryIdAtom, storyItemSelector } from '../utils/atoms'
-
+import Comments from './Comments'
 
 const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 
@@ -43,6 +43,8 @@ export default function StoryPage() {
 		// 	sOpen: openStoryId === storyId
 		// })}
 	>
+
+		<button onClick={() => setOpenStoryId(null)}>close</button>
 
 		<h1>
 			{ story.title }
@@ -80,7 +82,12 @@ export default function StoryPage() {
 
 		</>}
 
-				
+		{ story.text &&
+			<div dangerouslySetInnerHTML={{__html: story.text}} /> }
+
+		{/* <pre>{ JSON.stringify(story, null, 2) }</pre> */}
+
+		<Comments story={story} />
 
 	</div>
 }
