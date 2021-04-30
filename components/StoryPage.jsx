@@ -10,15 +10,14 @@ dayjs.extend(relativeTime)
 import { lastMaxItemSelector, openStoryIdAtom, storyItemSelector } from '../utils/atoms'
 
 
-
 const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 
 
-export default function Story({ storyId }) {
+export default function StoryPage() {
 
 	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
+	const [storyId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
-	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	
 	if (loadable.state === 'loading')
 		return <li className='story sLoading'>
@@ -35,47 +34,53 @@ export default function Story({ storyId }) {
 
 	if (!story) { 
 		console.warn('no story', storyId)
-		return <li>
-			<a href={`https://news.ycombinator.com/item?id=${storyId}`}>
-				#{storyId}
-			</a>
-		</li>
+		return <li>#{storyId}</li>
 	}
 	
-	return <li 
-		className={cn(`story s-${story.type}`, {
-			sNew: lastMaxItem < storyId,
-			sOpen: openStoryId === storyId
-		})}
+	return <div id='StoryPage'
+		// className={cn(`story s-${story.type}`, {
+		// 	sNew: lastMaxItem < storyId,
+		// 	sOpen: openStoryId === storyId
+		// })}
 	>
 
-		<a href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`} className='sLink'>
-			<span className='sTitle'>{ story.title }</span>
-			{ story.url &&
-				<small className='sUrl'>({ cleanUrl(story.url) })</small> }
-		</a>
+		<h1>
+			{ story.title }
+		</h1>
+
+		{ story.url &&
+			<p>
+				<a href={story.url}>{story.url}</a>
+			</p>
+		}
+
+		<p>
+			<span>
+				{ dayjs.unix(story.time).fromNow() }
+			</span> by <span>
+				{ story.by }
+			</span>
+		</p>
+
+		<p>
+			<a href={`https://news.ycombinator.com/item?id=${storyId}`}>
+				read on HackerNews
+			</a>
+		</p>
 
 		{ story.type !== 'job' &&  <>
 
-			<span className='sScore'>
-				{ story.score }
-			</span>
+			<h3>
+				{ story.score } { story.score > 1 ? 'points' : 'point' }
+			</h3>
 
-			<button className='sComments'
-				onClick={() => setOpenStoryId(storyId)}
-			>
-				{ story.descendants }
-			</button>
+			<h4>
+				{ story.descendants } { story.descendants > 1 ? 'comments' : 'comment' }
+			</h4>
 
 		</>}
 
-		<p className='sSub'>
-			<span className='sDate'>
-				{ dayjs.unix(story.time).fromNow() }
-			</span> by <span className='sBy'>
-				{ story.by }
-			</span> #{storyId}
-		</p>
+				
 
-	</li>
+	</div>
 }

@@ -11,22 +11,22 @@ export default function UserData() {
 	const dbConnected = useRecoilValue(dbConnectedAtom)
 
 	const setMaxItem = async () => {
-		try {
-			const maxitem = await db.child('/maxitem').once('value')
-			console.log('maxitem', maxitem.val())
-			localStorage.setItem('lastMaxItem', maxitem.val())
-		} catch (error) {
-			console.error(error)
-		}
+		// try {
+		// 	const maxitem = await db.child('/maxitem').once('value')
+		// 	console.log('maxitem', maxitem.val())
+		// 	localStorage.setItem('lastMaxItem', maxitem.val())
+		// } catch (error) {
+		// 	console.error(error)
+		// }
 	}
 	
 	React.useEffect(() => {
 		
-		console.log('UserData effect')
+		// console.log('UserData effect')
 
-		if (dbConnected) {
-			setMaxItem()
-		}
+		// if (dbConnected) {
+		// 	setMaxItem()
+		// }
 
 	}, [dbConnected])
 	
