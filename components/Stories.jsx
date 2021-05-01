@@ -16,7 +16,7 @@ import {
 	openStoryIdAtom,
 } from '../utils/atoms'
 
-const STORIESPERPAGE = 25
+const STORIESPERPAGE = 10
 
 
 export default function Stories({ type }) {
@@ -31,7 +31,7 @@ export default function Stories({ type }) {
 	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
 	// const [lastUpdate, setLastUpdate] = React.useState(null)
 	const [lastUpdate, setLastUpdate] = useRecoilState(lastUpdateAtom)
-	const orderedStories = useRecoilValue(orderedStoriesSelector(type, start, end))
+	const orderedStories = useRecoilValue(orderedStoriesSelector({ type, start, end }))
 	const openStoryId = useRecoilValue(openStoryIdAtom)
 
 	// const handleFetch = async () => {
@@ -92,7 +92,7 @@ export default function Stories({ type }) {
 	// const someStories = stories.slice(start, end)
 	// const someStories = orderedStories.slice(start, end)
 
-	return <main id='StoriesWrap'>
+	return <main id='MainStories'>
 
 		{/* { isFetching && <p>Fetching stories...</p> } */}
 		{/* <button onClick={clearStorage}>clear storage</button> */}
@@ -108,7 +108,7 @@ export default function Stories({ type }) {
 				/> order by latest
 			</label>
 
-			<ul id='Stories'>
+			<ul>
 				{ orderedStories.map(id => 
 					<Story key={id} storyId={id} />
 				)}

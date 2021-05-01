@@ -7,8 +7,6 @@ import UserData from '../utils/UserData'
 import Header from '../components/Header'
 
 import '../styles/layout.sass'
-import '../styles/stories.sass'
-import '../styles/story.sass'
 
 
 export default function AppWrap({ Component, pageProps }) {

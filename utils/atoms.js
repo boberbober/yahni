@@ -81,16 +81,16 @@ export const openStoryIdAtom = atom({
 export const orderedStoriesSelector = selectorFamily({
 	key: 'orderedStories',
 	default: [],
-	get: (type, start, end) => ({ get }) => {
+	get: ({ type, start, end }) => ({ get }) => {
 		console.log('orderedStories.get')
 		// get(lastUpdateAtom)
 		const stories = get(storiesAtom(type))
 		const latestOrder = get(orderAtom)
 		
 		if (!latestOrder)
-			return stories.slice(0, 10)
+			return stories.slice(start, end)
 
 		const sortedStories = stories.slice().sort((a, b) => b - a)
-		return sortedStories.slice(0, 10)
+		return sortedStories.slice(start, end)
 	}
 })
