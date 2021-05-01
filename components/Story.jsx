@@ -65,26 +65,26 @@ export default function Story({ storyId }) {
 				<small className='sUrl'>({ cleanUrl(story.url) })</small> }
 		</a>
 
-		{ story.type !== 'job' &&  <>
-
+		{ story.type !== 'job' && <>
 			<span className='sScore'>
 				{ story.score }
 			</span>
-
 			<button className='sComments'
 				onClick={() => setOpenStoryId(storyId)}
 			>
 				{ story.descendants }
 			</button>
-
 		</>}
+
+		{/* { story.type == 'job' &&  <> */}
+
 
 		<p className='sSub'>
 			<span className='sDate'>
 				{ dayjs.unix(story.time).fromNow() }
 			</span> by <span className='sBy'>
 				{ story.by }
-			</span> #{storyId}
+			</span>
 		</p>
 
 	</li>
