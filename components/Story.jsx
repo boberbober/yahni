@@ -7,7 +7,12 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
-import { lastMaxItemSelector, openStoryIdAtom, storyItemSelector } from '../utils/atoms'
+import { 
+	lastMaxItemSelector, 
+	openStoryIdAtom, 
+	storyItemSelector,
+	settingsAtom 
+} from '../utils/atoms'
 
 
 
@@ -19,6 +24,7 @@ export default function Story({ storyId }) {
 	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
 	const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
 	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
+	const { linkNewTab } = useRecoilValue(settingsAtom)
 	
 	if (loadable.state === 'loading')
 		return <li className='story sLoading'>
@@ -27,14 +33,14 @@ export default function Story({ storyId }) {
 		</li>
 
 	if (loadable.state === 'hasError') {
-		console.warn('story hasError', storyId)
+		// console.warn('story hasError', storyId)
 		return <li>error</li>
 	}
 
 	const story = loadable.contents  
 
 	if (!story) { 
-		console.warn('no story', storyId)
+		// console.warn('no story', storyId)
 		return <li>
 			<a href={`https://news.ycombinator.com/item?id=${storyId}`}>
 				#{storyId}
@@ -49,7 +55,11 @@ export default function Story({ storyId }) {
 		})}
 	>
 
-		<a href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`} className='sLink'>
+		<a 
+			className='sLink'
+			target={linkNewTab ? '_blank' : '_self'}
+			href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
+		>
 			<span className='sTitle'>{ story.title }</span>
 			{ story.url &&
 				<small className='sUrl'>({ cleanUrl(story.url) })</small> }

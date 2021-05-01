@@ -52,7 +52,7 @@ export default function Stories({ type }) {
 
 	const handleUpdate = React.useCallback(snap => {
 		const stories = snap.val()
-		console.log('update', stories.slice(0,5))
+		// console.log('update', stories.slice(0,5))
 		setStories(stories)
 		setLastUpdate(Date.now())
 		// setTimeout(() => {
@@ -66,7 +66,7 @@ export default function Stories({ type }) {
 			return
 
 		function unsubscribe() {
-			console.log('unsubscribe')
+			// console.log('unsubscribe')
 			db.off()
 		}
 		db.child(`/${type}stories`).on('value', handleUpdate)
@@ -101,14 +101,14 @@ export default function Stories({ type }) {
 
 		<div id='Stories'>
 
-			<label>
+			<label className='orderLatest'>
 				<input type='checkbox'
 					onChange={handleOrder}
 					checked={latestOrder}
 				/> order by latest
 			</label>
 
-			<ul>
+			<ul id='StoriesList'>
 				{ orderedStories.map(id => 
 					<Story key={id} storyId={id} />
 				)}

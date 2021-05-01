@@ -2,6 +2,9 @@
 import { atom, selector, selectorFamily, atomFamily } from 'recoil'
 
 import { db } from '../utils/firebase'
+import DEFAULTSETTINGS from '../utils/defaultSettings'
+
+const hasStorage = () => typeof window !== 'undefined' && !!window.localStorage
 
 
 export const lastMaxItemSelector = selector({
@@ -9,21 +12,12 @@ export const lastMaxItemSelector = selector({
 	default: null,
 	get: () => {
 		let lastMaxItem = null
-		try {
-			lastMaxItem = localStorage.getItem('lastMaxItem')
-			console.log('lastMaxItem', lastMaxItem)
-		} catch (error) { console.error(error) }
-		return lastMaxItem ?? null
+		if (hasStorage()) {
+			const storageItem = localStorage.getItem('lastMaxItem')
+			lastMaxItem = !!storageItem && parseInt(storageItem)
+		}
+		return lastMaxItem || null
 	},
-	// set: ({ set }) => {
-	// 	try {
-	// 		// const maxitem = await db.child('/maxitem').once('value')
-	// 		// console.log('maxitem', maxitem.val())
-	// 		localStorage.setItem('lastMaxItem', maxitem.val())
-	// 	} catch (error) {
-	// 		console.error(error)
-	// 	}
-	// }
 })
 
 export const storyItemSelector = selectorFamily({
@@ -31,10 +25,10 @@ export const storyItemSelector = selectorFamily({
 	get: storyId => async () => {
 		try {
 			const snap = await db.child(`item/${storyId}`).get()
-			console.log('loadable story', snap.val())
+			// console.log('loadable story', snap.val())
 			return snap.val()
 		} catch (error) {
-			console.warn(error)
+			// console.warn(error)
 			return null
 		}
 	}
@@ -47,7 +41,7 @@ export const commentSelector = selectorFamily({
 			const snap = await db.child(`item/${id}`).get()
 			return snap.val()
 		} catch (error) {
-			console.warn(error)
+			// console.warn(error)
 			return null
 		}
 	}
@@ -94,3 +88,25 @@ export const orderedStoriesSelector = selectorFamily({
 		return sortedStories.slice(start, end)
 	}
 })
+
+
+export const settingsAtom = atom({
+	key: 'settings',
+	default: new Promise(resolve => {
+		let settings = { ...DEFAULTSETTINGS }
+		try {
+			if (hasStorage()) {
+				const storageItem = localStorage.getItem('settings')
+				if (storageItem) {
+					const storageSettings = JSON.parse(storageItem)
+					if (storageSettings && storageSettings.hasOwnProperty('isDefault'))
+						settings = Object.assign(settings, storageSettings)
+				}
+			}
+		} catch (error) { console.warn(error) }
+		resolve(settings)
+	}),
+	// default: () => { return DEFAULTSETTINGS 	},
+})
+
+

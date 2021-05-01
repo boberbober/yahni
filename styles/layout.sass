@@ -2,13 +2,17 @@
 @use 'reset'
 @use 'stories'
 @use 'story'
+@use 'settings'
+
+:root
+	color-scheme: dark light
 
 body
 	font-family: sans-serif
 	display: flex
 	align-items: stretch
 	min-height: 100vh
-	
+	transition: background-color 0.6s ease, color 1s ease
 
 a
 	text-decoration: none
@@ -28,17 +32,22 @@ header
 	display: flex
 	margin: 0
 	padding: .5em 1em
+	align-items: baseline
 
 #logo
 	margin-right: 1em
 
 nav
 	display: flex
+	margin-right: auto
 
 .navLink
 	margin-right: 1em
 	&.selected
 		background: gold
+
+#dbConnected
+	margin-right: 1em
 
 
 // Stories
