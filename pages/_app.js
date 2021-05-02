@@ -16,6 +16,7 @@ export default function AppWrap({ Component, pageProps }) {
 	return <RecoilRoot>
 
 		<Helmet defer={false}>
+			<meta name='color-scheme' content='light dark' />
 			<title>YAHNI</title>
 		</Helmet>
 

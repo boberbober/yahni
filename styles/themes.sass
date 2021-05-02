@@ -1,0 +1,39 @@
+
+
+:root
+	--bgrColor: white
+	--textColor: black
+	@media (prefers-color-scheme: dark)
+		--bgrColor: black
+		--textColor: white
+
+body[data-theme='hn-light']
+	--bgrColor: tan
+	--textColor: #444
+
+body[data-theme='hn-dark']
+	--bgrColor: salmon
+	--textColor: white
+
+
+// body[data-theme='hn']
+// 	@media (prefers-color-scheme: light)
+// 		--bgrColor: #ddd
+// 		--textColor: black
+// 	&[data-darkMode='off']
+// 		--bgrColor: #ddd
+// 		--textColor: black
+// 	&[data-darkMode='on']
+// 		--bgrColor: #444
+// 		--textColor: #aaa
+// 	@media (prefers-color-scheme: dark)
+// 		--bgrColor: #444
+// 		--textColor: #aaa
+
+
+
+// body[data-theme='solarized']
+// 	--headerBgr: aqua
+// 	@media (prefers-color-scheme: dark)
+// 		--headerBgr: blue
+

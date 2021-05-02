@@ -1,7 +1,6 @@
 
 import React from 'react'
 import { useRecoilValue } from 'recoil'
-import { Helmet } from 'react-helmet'
 
 import { settingsAtom } from '../utils/atoms'
 
@@ -10,25 +9,22 @@ export default function SettingsProvider() {
 
 	const settings = useRecoilValue(settingsAtom)
 
-	let colorScheme = settings.darkMode === 'on' 
-		? 'dark' 
-		: settings.darkMode === 'off'
-		? 'light'
-		: 'light dark'
-	
-	return <Helmet>
+	React.useEffect(() => {
 
-		<meta name='color-scheme' content={colorScheme} />
+		const mql = window.matchMedia('(prefers-color-scheme: dark)')
 
-		<title>{ colorScheme }</title>
-
-		<style type='text/css'>{`
-
-			:root {
-				color-scheme: ${colorScheme};
-			}
+		function setBodyTheme() {
+			const colorScheme = settings.darkMode === 'auto'
+				?	mql.matches ? 'dark' : 'light'
+				:	settings.darkMode === 'on' ? 'dark' : 'light'
+			document.body.dataset.theme = `${settings.theme}-${colorScheme}`
+		}
+		setBodyTheme()
 		
-		`}</style>
+		mql.addEventListener('change', setBodyTheme)
+		return () => mql.removeEventListener('change', setBodyTheme)
 
-	</Helmet>
+	}, [settings.theme, settings.darkMode])
+	
+	return null
 }

@@ -2,6 +2,6 @@
 export default {
 	isDefault: true,
 	linkNewTab: true,
-	theme: 'default',
+	theme: 'hn',
 	darkMode: 'auto',
 }
