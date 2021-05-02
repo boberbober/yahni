@@ -4,7 +4,7 @@
 @use 'stories'
 @use 'story'
 @use 'settings'
-
+@use 'header'
 
 :root
 	color-scheme: light dark
@@ -41,42 +41,26 @@ h3
 
 a
 	text-decoration: none
+	color: var(--linkColor)
 	&:hover
 		text-decoration: underline
+	&:visited
+		color: var(--visitedColor)
 
 small
 	font-size: smaller
 
+em
+	font-style: italic
+
+button
+	color: inherit
 
 #__next
 	flex: 1
 	display: flex
 	flex-direction: column
 	height: 100vh
-
-
-// Header
-
-header
-	display: flex
-	margin: 0
-	padding: .5em 1em
-	align-items: baseline
-
-#logo
-	margin-right: 1em
-
-nav
-	display: flex
-	margin-right: auto
-
-.navLink
-	margin-right: 1em
-	&.selected
-		color: ActiveText
-
-#dbConnected
-	margin-right: 1em
 
 
 // Stories

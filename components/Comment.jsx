@@ -28,10 +28,15 @@ export default function Comment({ id }) {
 		console.warn('no comment', id)
 		return <p>no comment {id}</p>
 	}
-	
+
+	if (comment.deleted)
+		return <div className='comment'><em>[deleted]</em></div>
+
 	return <div className='comment'>
 
-		<p>by {comment.by} { dayjs.unix(comment.time).fromNow() }</p>
+		<p className='cBy'>
+			{comment.by} <small>{ dayjs.unix(comment.time).fromNow() }</small>
+		</p>
 
 		<div className='cText'
 			dangerouslySetInnerHTML={{__html: comment.text}} 

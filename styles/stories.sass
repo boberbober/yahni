@@ -15,7 +15,7 @@
 	// background: blue
 
 .story
-	margin-bottom: .5em
+	margin-bottom: 1em
 	display: grid
 	grid-template-columns: 3em 4em 1fr
 	grid-template-rows: auto auto
@@ -28,7 +28,7 @@
 
 .sOpen
 	.sLink
-		color: ActiveText
+		color: var(--activeColor)
 
 .sScore
 	grid-area: 1/1/3/2
@@ -37,17 +37,31 @@
 .sComments
 	grid-area: 1/2/3/3
 	border: none
-	padding: 0
+	padding: .25em .5em
 	align-self: start
 	justify-self: center
-	font-size: inherit
-	background: none
+	font-size: small
+	border-radius: .25em
+	background: var(--bgrAltColor)
+	position: relative
+	color: inherit
+	&:after
+		content: ''
+		position: absolute
+		bottom: -.5em
+		left: calc(50% - .25em)
+		width: 0
+		height: 0
+		border: .5em solid transparent
+		border-top-color: var(--bgrAltColor)
+		border-bottom: 0
+		border-right: 0
 
 .sLink
 	grid-area: 1/3/2/4
 	justify-self: start
 	small
-		opacity: .75
+		color: inherit
 
 .sUrl
 	margin-left: 1em
@@ -55,6 +69,7 @@
 .sSub
 	grid-area: 2/3/3/4
 	margin: 0
+	font-size: small
 
 // .s-job
 // 	.sLink
