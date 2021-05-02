@@ -27,6 +27,7 @@ const DARKMODE = [
 
 export default function Settings() {
 
+	const [showSettings, setShowSettings] = React.useState(true)
 	const [settings, setSettings] = useRecoilState(settingsAtom)
 
 	const handleChange = ({ target }) => {
@@ -34,6 +35,9 @@ export default function Settings() {
 			draft[target.name] = target.type === 'checkbox' ? target.checked : target.value
 		}))
 	}
+
+	if (!showSettings)
+		return null
 
 	return <div id='Settings'>
 		
@@ -60,7 +64,7 @@ export default function Settings() {
 
 		<h4>Dark mode</h4>
 		{ DARKMODE.map(([id, label]) =>
-			<label>
+			<label key={id}>
 				<input type='radio'
 					name='darkMode'
 					value={id}

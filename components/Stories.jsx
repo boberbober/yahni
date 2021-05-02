@@ -16,7 +16,7 @@ import {
 	openStoryIdAtom,
 } from '../utils/atoms'
 
-const STORIESPERPAGE = 10
+const STORIESPERPAGE = 25
 
 
 export default function Stories({ type }) {

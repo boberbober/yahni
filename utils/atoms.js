@@ -90,9 +90,38 @@ export const orderedStoriesSelector = selectorFamily({
 })
 
 
+
+const storeSettingsEffect = ({setSelf, trigger, onSet}) => {
+
+	console.log('storageSettingsEffect', trigger)
+	// Initialize atom value to the remote storage state
+	// if (trigger === 'get') { // Avoid expensive initialization
+	// 	setSelf(myRemoteStorage.get(userID)); // Call synchronously to initialize
+	// }
+
+	// Subscribe to remote storage changes and update the atom value
+	// myRemoteStorage.onChange(userID, userInfo => {
+	// 	setSelf(userInfo); // Call asynchronously to change value
+	// });
+
+	onSet(settings => {
+		console.log('onSet', settings)
+		try {
+			if (hasStorage())
+				localStorage.setItem('settings', JSON.stringify(settings))
+		} catch (error) { console.warn(error) }
+	})
+
+	// Cleanup remote storage subscription
+	// return () => {
+	// 	myRemoteStorage.onChange(userID, null);
+	// }
+}
+
 export const settingsAtom = atom({
 	key: 'settings',
 	default: new Promise(resolve => {
+		console.log('default storage settings')
 		let settings = { ...DEFAULTSETTINGS }
 		try {
 			if (hasStorage()) {
@@ -106,7 +135,6 @@ export const settingsAtom = atom({
 		} catch (error) { console.warn(error) }
 		resolve(settings)
 	}),
+	effects_UNSTABLE: [storeSettingsEffect]
 	// default: () => { return DEFAULTSETTINGS 	},
 })
-
-
