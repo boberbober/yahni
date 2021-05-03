@@ -12,7 +12,7 @@ import {
 	dbConnectedAtom, 
 	orderAtom, 
 	orderedStoriesSelector, 
-	lastUpdateAtom,
+	// lastUpdateAtom,
 	openStoryIdAtom,
 	settingsAtom,
 } from '../utils/atoms'
@@ -24,11 +24,11 @@ export default function Stories({ type }) {
 
 	const dbConnected = useRecoilValue(dbConnectedAtom)
 	const [stories, setStories] = useRecoilState(storiesAtom(type))
-	const [start, setStart] = React.useState(0)
+	const [start] = React.useState(0)
 	const [end, setEnd] = React.useState(STORIESPERPAGE)
 	const storiesLen = stories.length
-	const [latestOrder, setLatestOrder] = useRecoilState(orderAtom)
-	const [lastUpdate, setLastUpdate] = useRecoilState(lastUpdateAtom)
+	const [latestOrder, setLatestOrder] = useRecoilState(orderAtom(type))
+	// const setLastUpdate = useSetRecoilState(lastUpdateAtom)
 	const orderedStories = useRecoilValue(orderedStoriesSelector({ type, start, end }))
 	const openStoryId = useRecoilValue(openStoryIdAtom)
 	const { infiniteScroll } = useRecoilValue(settingsAtom)
@@ -50,7 +50,8 @@ export default function Stories({ type }) {
 	const handleUpdate = React.useCallback(snap => {
 		const stories = snap.val()
 		setStories(stories)
-		setLastUpdate(Date.now())
+		console.log('update')
+		// setLastUpdate(Date.now())
 	}, [dbConnected])
 
 	React.useEffect(() => {
@@ -81,12 +82,14 @@ export default function Stories({ type }) {
 
 		<div id='Stories' ref={scrollRef}>
 
-			<label className='orderLatest'>
-				<input type='checkbox'
-					onChange={handleOrder}
-					checked={latestOrder}
-				/> order by latest
-			</label>
+			{ ['top', 'best', 'ask', 'show'].includes(type) && 
+				<label className='orderLatest'>
+					<input type='checkbox'
+						onChange={handleOrder}
+						checked={latestOrder}
+					/> order by date
+				</label>
+			}
 
 			<ul id='StoriesList'>
 				{ orderedStories.map(id => 
