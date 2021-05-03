@@ -4,4 +4,5 @@ export default {
 	linkNewTab: true,
 	theme: 'hn',
 	darkMode: 'auto',
+	infiniteScroll: false,
 }

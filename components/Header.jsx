@@ -20,7 +20,7 @@ const pages = [
 export default function Header() {
 
 	const dbConnected = useRecoilValue(dbConnectedAtom)
-	const [showSettings, setShowSettings] = React.useState(true)
+	const [showSettings, setShowSettings] = React.useState(false)
 
 	return <header>
 		

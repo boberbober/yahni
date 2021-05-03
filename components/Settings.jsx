@@ -49,6 +49,14 @@ export default function Settings() {
 			/> open links in new tab
 		</label>
 
+		<label>
+			<input type='checkbox'
+				name='infiniteScroll'
+				checked={settings.infiniteScroll}
+				onChange={handleChange}
+			/> enable infinite scroll
+		</label>
+
 		<h4>Theme</h4>
 
 		{ Object.entries(THEMES).map(([id, { name }]) =>

@@ -50,11 +50,19 @@ a
 small
 	font-size: smaller
 
-em
+em, i
 	font-style: italic
 
 button
-	color: inherit
+	color: var(--buttonTextColor)
+	background: var(--buttonColor)
+	border-radius: .25em
+	border: 1px solid transparent
+	padding: .25em .75em
+	&:hover
+		border: 1px solid var(--buttonTextColor)
+
+
 
 #__next
 	flex: 1

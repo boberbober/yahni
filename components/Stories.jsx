@@ -1,6 +1,7 @@
 
 import React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 
 import Story from '../components/Story'
 import StoryPage from '../components/StoryPage'
@@ -11,53 +12,45 @@ import {
 	dbConnectedAtom, 
 	orderAtom, 
 	orderedStoriesSelector, 
-	lastMaxItemSelector,
 	lastUpdateAtom,
 	openStoryIdAtom,
+	settingsAtom,
 } from '../utils/atoms'
 
-const STORIESPERPAGE = 25
+const STORIESPERPAGE = 50
 
 
 export default function Stories({ type }) {
 
 	const dbConnected = useRecoilValue(dbConnectedAtom)
-	const [isFetching, setFetching] = React.useState(null) 
 	const [stories, setStories] = useRecoilState(storiesAtom(type))
 	const [start, setStart] = React.useState(0)
 	const [end, setEnd] = React.useState(STORIESPERPAGE)
 	const storiesLen = stories.length
 	const [latestOrder, setLatestOrder] = useRecoilState(orderAtom)
-	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
-	// const [lastUpdate, setLastUpdate] = React.useState(null)
 	const [lastUpdate, setLastUpdate] = useRecoilState(lastUpdateAtom)
 	const orderedStories = useRecoilValue(orderedStoriesSelector({ type, start, end }))
 	const openStoryId = useRecoilValue(openStoryIdAtom)
+	const { infiniteScroll } = useRecoilValue(settingsAtom)
 
-	// const handleFetch = async () => {
-	// 	console.log('fetch')
-	// 	setFetching(true)
-	// 	const snap = await db.child(`/${type}stories`).once('value')
-	// 	setStories(snap.val())
-	// 	setFetching(false)
-	// }
+	const scrollRef = useBottomScrollListener(() => infiniteScroll && nextPage(),
+		{ debounce: 200, offset: 100, triggerOnNoScroll: false }
+	)
 
-	const handleMore = () => {
-		setEnd(prev => prev + STORIESPERPAGE)
+	const nextPage = () => {
+		const nextEnd = end + STORIESPERPAGE
+		if (nextEnd > storiesLen) return
+		setEnd(nextEnd)
 	}
-
+	
 	const handleOrder = event => {
 		setLatestOrder(event.target.checked)
 	}
 
 	const handleUpdate = React.useCallback(snap => {
 		const stories = snap.val()
-		// console.log('update', stories.slice(0,5))
 		setStories(stories)
 		setLastUpdate(Date.now())
-		// setTimeout(() => {
-		// 	console.log('setStories')
-		// }, !lastUpdate ? 1 : 10000)
 	}, [dbConnected])
 
 	React.useEffect(() => {
@@ -66,7 +59,6 @@ export default function Stories({ type }) {
 			return
 
 		function unsubscribe() {
-			// console.log('unsubscribe')
 			db.off()
 		}
 		db.child(`/${type}stories`).on('value', handleUpdate)
@@ -85,21 +77,9 @@ export default function Stories({ type }) {
 	}, [dbConnected])
 
 
-	function clearStorage() {
-		localStorage.removeItem('lastMaxItem')
-	}
-
-	// const someStories = stories.slice(start, end)
-	// const someStories = orderedStories.slice(start, end)
-
 	return <main id='MainStories'>
 
-		{/* { isFetching && <p>Fetching stories...</p> } */}
-		{/* <button onClick={clearStorage}>clear storage</button> */}
-		{/* <p>lastmaxitem: {lastMaxItem}</p> */}
-		{/* <p>lastupdate: {lastUpdate}</p> */}
-
-		<div id='Stories'>
+		<div id='Stories' ref={scrollRef}>
 
 			<label className='orderLatest'>
 				<input type='checkbox'
@@ -114,11 +94,19 @@ export default function Stories({ type }) {
 				)}
 			</ul>
 
-			{ (storiesLen > 0 && end < storiesLen) &&
-				<button onClick={handleMore}>More ({ start } - { end } / {storiesLen})</button> }
+			{ (!infiniteScroll && storiesLen > 0 && end < storiesLen) &&
+				<button 
+					id='moreStoriesButton'
+					onClick={() => nextPage()}
+				>
+					Load more
+				</button> 
+			}
+
+			{/* <p>({ start } - { end } / {storiesLen})</p> */}
 
 			{ (storiesLen > 0 && end >= storiesLen) &&
-				<p>end.</p> }
+				<p id='storiesEnd'>end</p> }
 
 		</div>
 
