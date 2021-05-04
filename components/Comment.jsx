@@ -10,9 +10,20 @@ dayjs.extend(relativeTime)
 import { commentSelector, lastMaxItemSelector, openStoryIdAtom, storyItemSelector } from '../utils/atoms'
 
 
+function fixCommentHtml(text) {
+
+	return text.replace(/(^|<p>|<i>)&gt; ?/g, '<p class="cQuot">').replace(/`(.+?)`/g, `<code>$1</code>`)
+}
+
+
 export default function Comment({ id }) {
 
 	const loadable = useRecoilValueLoadable(commentSelector(id))
+	const [showKids, setShowKids] = React.useState(true)
+
+	const handleToggle = () => {
+		setShowKids(prev => !prev)
+	}
 
 	if (loadable.state === 'loading')
 		return 'loading...'
@@ -34,15 +45,31 @@ export default function Comment({ id }) {
 
 	return <div className='comment'>
 
-		<p className='cBy'>
-			{comment.by} <small>{ dayjs.unix(comment.time).fromNow() }</small>
+		<p className='cHead'>
+			<span className='cBy'>{comment.by}</span>
+			<a className='cUrl' href={`https://news.ycombinator.com/item?id=${id}`}>
+				{ dayjs.unix(comment.time).fromNow() }
+			</a>
+			{ comment.kids &&
+				<button onClick={handleToggle}>
+					{ showKids ? "collapse" : "open" }		
+				</button>
+			}
 		</p>
 
 		<div className='cText'
-			dangerouslySetInnerHTML={{__html: comment.text}} 
+			dangerouslySetInnerHTML={{__html: fixCommentHtml(comment.text)}} 
 		/>
+		{/* <details>
+			<summary>comment.text</summary>
+			{comment.text}
+		</details>
+		<details>
+			<summary>fixCommentHtml(comment.text)</summary>
+			{fixCommentHtml(comment.text)}
+		</details> */}
 
-		{ !!comment.kids && 
+		{ (showKids && !!comment.kids) && 
 			comment.kids.map(id =>
 				<Comment key={id} id={id} />
 			)

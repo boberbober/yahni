@@ -7,6 +7,8 @@
 
 #StoryComments
 	margin: 1em 0
+	// display: flex
+	// flex-direction: column
 
 .comment
 	border-radius: .5em
@@ -19,7 +21,6 @@
 	
 	+ .comment
 		border-top-left-radius: .5em !important
-	
 		
 .cBy
 	padding: .5em .5em 0 1em
@@ -32,3 +33,17 @@
 		margin: .5em 0
 	a
 		overflow-wrap: anywhere
+	pre
+		white-space: pre-wrap
+		margin: .5em 0
+		// overflow-x: auto
+		// background: blue
+	code
+		font-family: monospace
+		// background: aqua
+	p.cQuot
+		// background: #555
+		font-style: italic
+		border-left: 1px solid currentColor
+		padding-left: .5em
+		margin-left: .5em
