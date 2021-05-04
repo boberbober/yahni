@@ -93,7 +93,7 @@ export default function Stories({ type }) {
 					<input type='checkbox'
 						onChange={handleOrder}
 						checked={latestOrder}
-					/> order by date
+					/> newest first
 				</label>
 			}
 
