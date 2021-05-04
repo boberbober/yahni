@@ -5,4 +5,5 @@ export default {
 	theme: 'hn',
 	darkMode: 'auto',
 	infiniteScroll: false,
+	hideStoryItems: {},
 }

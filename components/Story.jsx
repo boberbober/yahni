@@ -24,7 +24,7 @@ export default function Story({ storyId }) {
 	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
 	const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
 	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
-	const { linkNewTab } = useRecoilValue(settingsAtom)
+	const { linkNewTab, hideStoryItems } = useRecoilValue(settingsAtom)
 	
 	if (loadable.state === 'loading')
 		return <li className='story sLoading'>
@@ -51,9 +51,30 @@ export default function Story({ storyId }) {
 	return <li 
 		className={cn(`story s-${story.type}`, {
 			sNew: lastMaxItem < storyId,
-			sOpen: openStoryId === storyId
+			sOpen: openStoryId === storyId,
+			noScore: hideStoryItems.score,
+			noComments: hideStoryItems.comments,
 		})}
 	>
+
+		{ story.type !== 'job' && <>
+			
+			{ !hideStoryItems.score &&
+				<span className='sScore'>
+					{ story.score }
+				</span>
+			}
+
+			{ !hideStoryItems.comments &&
+				<button className='sComments'
+					onClick={() => setOpenStoryId(storyId)}
+				>
+					{ story.descendants }
+				</button>
+			}
+
+		</>}
+
 
 		<a 
 			className='sLink'
@@ -65,27 +86,24 @@ export default function Story({ storyId }) {
 				<small className='sUrl'>({ cleanUrl(story.url) })</small> }
 		</a>
 
-		{ story.type !== 'job' && <>
-			<span className='sScore'>
-				{ story.score }
-			</span>
-			<button className='sComments'
-				onClick={() => setOpenStoryId(storyId)}
-			>
-				{ story.descendants }
-			</button>
-		</>}
 
-		{/* { story.type == 'job' &&  <> */}
+		{ (!hideStoryItems.date || !hideStoryItems.user) &&
+			<p className='sSub'>
 
+				{ !hideStoryItems.date && <>
+					<span className='sDate'>
+						{ dayjs.unix(story.time).fromNow() }
+					</span>{' '}
+				</>}
 
-		<p className='sSub'>
-			<span className='sDate'>
-				{ dayjs.unix(story.time).fromNow() }
-			</span> by <span className='sBy'>
-				{ story.by }
-			</span>
-		</p>
+				{ !hideStoryItems.user && <>
+					<span className='sBy'>
+						by { story.by }
+					</span>
+				</>}
+
+			</p>
+		}
 
 	</li>
 }

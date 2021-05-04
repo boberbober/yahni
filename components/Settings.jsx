@@ -25,6 +25,14 @@ const DARKMODE = [
 ]
 
 
+const STORYITEMS = [
+	['score', 'score'],
+	['comments', 'comments'],
+	['date', 'date'],
+	['user', 'user'],
+]
+
+
 export default function Settings() {
 
 	const [showSettings, setShowSettings] = React.useState(true)
@@ -33,6 +41,12 @@ export default function Settings() {
 	const handleChange = ({ target }) => {
 		setSettings(produce(settings, draft => {
 			draft[target.name] = target.type === 'checkbox' ? target.checked : target.value
+		}))
+	}
+
+	const handleHideStoryItems = ({ target }) => {
+		setSettings(produce(settings, draft => {
+			draft.hideStoryItems[target.value] = !target.checked
 		}))
 	}
 
@@ -82,6 +96,17 @@ export default function Settings() {
 			</label>
 		)}
 
+		<h4>Show story list items</h4>
+		{ STORYITEMS.map(([id, label]) =>
+			<label key={id}>
+				<input type='checkbox'
+					name={`storyItems-${id}`}
+					value={id}
+					checked={!settings.hideStoryItems[id]}
+					onChange={handleHideStoryItems}
+				/> { label }
+			</label>
+		)}
 
 	</div>
 }

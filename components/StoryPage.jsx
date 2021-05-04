@@ -77,7 +77,11 @@ export default function StoryPage() {
 			</h3>
 
 			<h4>
-				{ story.descendants } { story.descendants > 1 ? 'comments' : 'comment' }
+				{ !story.descendants ? "no comments"
+					: story.descendants > 1 
+					? `${story.descendants} comments` 
+					: 'one comment' 
+				}
 			</h4>
 
 		</>}

@@ -82,7 +82,13 @@ export default function Stories({ type }) {
 
 		<div id='Stories' ref={scrollRef}>
 
-			{ ['top', 'best', 'ask', 'show'].includes(type) && 
+			{ (dbConnected && !storiesLen) &&
+				<p>Loading stories...</p> }
+
+			{ (!dbConnected && !storiesLen) &&
+				<p>Connecting...</p> }
+
+			{ (!!storiesLen && ['top', 'best', 'ask', 'show'].includes(type)) && 
 				<label className='orderLatest'>
 					<input type='checkbox'
 						onChange={handleOrder}
