@@ -44,7 +44,10 @@
 .sNew
 	.sLink
 		// font-weight: bold
-		color: #2aa198	
+		color: #2aa198
+		&:visited
+			color: var(--visitedColor)
+
 
 .sOpen
 	.sLink
@@ -66,9 +69,14 @@
 	justify-self: end
 	font-size: small
 	border-radius: .25em
-	background: var(--bgrAltColor)
 	position: relative
 	color: inherit
+	--bgrColor: var(--bgrAltColor)
+	background: var(--bgrColor)
+	&.scOpened
+		--bgrColor: var(--buttonColor)
+	&.scHasNew
+		--bgrColor: var(--activeColor)
 	&:hover,
 	&:active
 		background: var(--linkColor)
@@ -86,7 +94,7 @@
 		width: 0
 		height: 0
 		border: var(--size) solid transparent
-		border-top-color: var(--bgrAltColor)
+		border-top-color: var(--bgrColor)
 		border-bottom: 0
 		border-right: 0
 

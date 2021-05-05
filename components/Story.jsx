@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { selectorFamily, useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
+import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
 import cn from 'classnames'
 
 import dayjs from 'dayjs'
@@ -11,7 +11,8 @@ import {
 	lastMaxItemSelector, 
 	openStoryIdAtom, 
 	storyItemSelector,
-	settingsAtom 
+	settingsAtom,
+	openedStorySelector,
 } from '../utils/atoms'
 
 
@@ -25,6 +26,7 @@ export default function Story({ storyId }) {
 	const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
 	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const { linkNewTab, hideStoryItems } = useRecoilValue(settingsAtom)
+	const openedStory = useRecoilValue(openedStorySelector(storyId))
 	
 	if (loadable.state === 'loading')
 		return <li className='story sLoading'>
@@ -66,7 +68,11 @@ export default function Story({ storyId }) {
 			}
 
 			{ !hideStoryItems.comments &&
-				<button className='sComments'
+				<button 
+					className={cn('sComments', { 
+						scOpened: !!openedStory,
+						scHasNew: openedStory?.desc < story.descendants,
+					})}
 					onClick={() => setOpenStoryId(storyId)}
 				>
 					{ story.descendants }

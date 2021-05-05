@@ -1,23 +1,30 @@
 
 import React from 'react'
 import { selectorFamily, useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
-import cn from 'classnames'
+// import cn from 'classnames'
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
-import { lastMaxItemSelector, openStoryIdAtom, storyItemSelector } from '../utils/atoms'
 import Comments from './Comments'
 
-const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
+import { 
+	openedStorySelector, 
+	openStoryIdAtom, 
+	storyItemSelector 
+} from '../utils/atoms'
+
+
+// const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 
 
 export default function StoryPage() {
 
-	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
+	// const lastMaxItem = useRecoilValue(lastMaxItemSelector)
 	const [storyId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
+	const [openedStory, setOpenedStory] = useRecoilState(openedStorySelector(storyId))
 	
 	if (loadable.state === 'loading')
 		return <li className='story sLoading'>
@@ -30,12 +37,16 @@ export default function StoryPage() {
 		return <li>error</li>
 	}
 
-	const story = loadable.contents  
+	const story = loadable.contents
 
 	if (!story) { 
 		console.warn('no story', storyId)
 		return <li>#{storyId}</li>
 	}
+
+	React.useEffect(() => {
+		setOpenedStory(story.descendants || 0)
+	}, [setOpenedStory])
 	
 	return <div id='StoryPage'
 		// className={cn(`story s-${story.type}`, {
@@ -45,6 +56,8 @@ export default function StoryPage() {
 	>
 
 		<button onClick={() => setOpenStoryId(null)}>close</button>
+
+		<p>story opened: {JSON.stringify(openedStory)}</p>
 
 		<h1>
 			{ story.title }

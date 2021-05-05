@@ -34,6 +34,11 @@ export default function Header() {
 					<a>{label}</a>
 				</NavLink>
 			)} 
+
+			<Link href='/opened'>
+				<a>opened</a>
+			</Link>
+
 		</nav>
 
 		<span id='dbConnected'>

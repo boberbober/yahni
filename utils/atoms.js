@@ -3,75 +3,26 @@ import { atom, selector, selectorFamily, atomFamily, DefaultValue } from 'recoil
 
 import { db } from '../utils/firebase'
 import DEFAULTSETTINGS from '../utils/defaultSettings'
+import produce from 'immer'
 
 const hasStorage = () => typeof window !== 'undefined' && !!window.localStorage
 
 
-export const lastMaxItemSelector = selector({
-	key: 'lastMaxItem',
-	default: null,
-	get: () => {
-		let lastMaxItem = null
-		if (hasStorage()) {
-			const storageItem = localStorage.getItem('lastMaxItem')
-			lastMaxItem = !!storageItem && parseInt(storageItem)
-		}
-		return lastMaxItem || null
-	},
-	// set: ({ set }, value) => {
-	// 	localStorage.setItem('lastMaxItem', value)
-	// 	set(value)
-	// }
-})
-
-export const storyItemSelector = selectorFamily({
-	key: 'storyItem',
-	get: storyId => async () => {
-		try {
-			const snap = await db.child(`item/${storyId}`).get()
-			return snap.val()
-		} catch (error) {
-			return null
-		}
-	}
-})
-
-export const commentSelector = selectorFamily({
-	key: 'comment',
-	get: id => async () => {
-		try {
-			const snap = await db.child(`item/${id}`).get()
-			return snap.val()
-		} catch (error) {
-			return null
-		}
-	}
-})
-
-export const dbConnectedAtom = atom({
-	key: `dbConnected`,
-	default: false
-})
-
-
-
+// localStorage effect
 
 function loadFromStorage(key) {
 	try {
 		const storageItem = localStorage.getItem(key)
 		const storageObject = JSON.parse(storageItem)
 		return storageObject
-	} catch {
-		return null
-	}
+	} catch { return null }
 }
 
 function saveToStorage(key, value) {
 	try {
 		localStorage.setItem(key, JSON.stringify(value))
-	} catch {}
+	} catch (error) { console.warn(error) }
 }
-
 
 const storageEffect = (prefix, key = '') => ({ trigger, setSelf, onSet }) => {
 
@@ -85,53 +36,36 @@ const storageEffect = (prefix, key = '') => ({ trigger, setSelf, onSet }) => {
 	}
 
 	onSet(value => {
-		console.log('onSet', key, value)
+		console.log('storage effect set', key, value)
 		if (!(value instanceof DefaultValue))
 			saveToStorage(storageKey, value)
 	})
 }
 
 
-export const orderAtom = atomFamily({
-	key: 'order',
-	default: false,
-	effects_UNSTABLE: key => [storageEffect('order', key)]
+// Atoms and selectors
+
+export const dbConnectedAtom = atom({
+	key: `dbConnected`,
+	default: false
 })
-
-
-// export const settingsAtom = atom({
-// 	key: 'settings',
-// 	default: new Promise(resolve => {
-// 		console.log('default storage settings')
-// 		let settings = { ...DEFAULTSETTINGS }
-// 		try {
-// 			if (hasStorage()) {
-// 				const storageItem = localStorage.getItem('settings')
-// 				if (storageItem) {
-// 					const storageSettings = JSON.parse(storageItem)
-// 					if (storageSettings && storageSettings.hasOwnProperty('isDefault'))
-// 						settings = Object.assign(settings, storageSettings)
-// 				}
-// 			}
-// 		} catch (error) { console.warn(error) }
-// 		resolve(settings)
-// 	}),
-// 	effects_UNSTABLE: [storeSettingsEffect]
-// })
-
-
-
-
 
 export const storiesAtom = atomFamily({
 	key: 'stories',
 	default: []
 })
 
-// export const lastUpdateAtom = atom({
-// 	key: 'lastUpdate',
-// 	default: null,
-// })
+export const storyItemSelector = selectorFamily({
+	key: 'storyItem',
+	get: storyId => async () => {
+		try {
+			const snap = await db.child(`item/${storyId}`).get()
+			return snap.val()
+		} catch (error) {
+			return null
+		}
+	}
+})
 
 export const openStoryIdAtom = atom({
 	key: 'openStoryId',
@@ -150,6 +84,64 @@ export const orderedStoriesSelector = selectorFamily({
 		return sortedStories.slice(start, end)
 	}
 })
+
+export const commentSelector = selectorFamily({
+	key: 'comment',
+	get: id => async () => {
+		try {
+			const snap = await db.child(`item/${id}`).get()
+			return snap.val()
+		} catch (error) {
+			return null
+		}
+	}
+})
+
+
+export const orderAtom = atomFamily({
+	key: 'order',
+	default: false,
+	effects_UNSTABLE: key => [storageEffect('order', key)]
+})
+
+
+export const lastMaxItemSelector = selector({
+	key: 'lastMaxItem',
+	default: null,
+	get: () => {
+		let lastMaxItem = null
+		if (hasStorage()) {
+			const storageItem = localStorage.getItem('lastMaxItem')
+			lastMaxItem = !!storageItem && parseInt(storageItem)
+		}
+		return lastMaxItem || null
+	},
+})
+
+
+export const openedStoriesAtom = atom({
+	key: 'openedStories',
+	default: {},
+	effects_UNSTABLE: [storageEffect('openedStories')]
+})
+
+export const openedStorySelector = selectorFamily({
+	key: 'openedStory',
+	default: null,
+	get: id => ({ get }) => {
+		const openedStories = get(openedStoriesAtom)
+		return openedStories[id] || null
+	},
+	set: id => ({ set }, desc) => {
+		set(openedStoriesAtom, prev => produce(prev, draft => {
+			draft[id] = {
+				time: Date.now(),
+				desc,
+			}
+		}))
+	}
+})
+
 
 
 

@@ -2,6 +2,7 @@
 import React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
+import { Helmet } from 'react-helmet'
 
 import Story from '../components/Story'
 import StoryPage from '../components/StoryPage'
@@ -12,7 +13,6 @@ import {
 	dbConnectedAtom, 
 	orderAtom, 
 	orderedStoriesSelector, 
-	// lastUpdateAtom,
 	openStoryIdAtom,
 	settingsAtom,
 } from '../utils/atoms'
@@ -78,6 +78,10 @@ export default function Stories({ type }) {
 
 
 	return <main id='MainStories'>
+
+		<Helmet>
+			<title>{type}</title>
+		</Helmet>
 
 		<div id='Stories' ref={scrollRef}>
 
