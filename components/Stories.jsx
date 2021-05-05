@@ -28,7 +28,6 @@ export default function Stories({ type }) {
 	const [end, setEnd] = React.useState(STORIESPERPAGE)
 	const storiesLen = stories.length
 	const [latestOrder, setLatestOrder] = useRecoilState(orderAtom(type))
-	// const setLastUpdate = useSetRecoilState(lastUpdateAtom)
 	const orderedStories = useRecoilValue(orderedStoriesSelector({ type, start, end }))
 	const openStoryId = useRecoilValue(openStoryIdAtom)
 	const { infiniteScroll } = useRecoilValue(settingsAtom)

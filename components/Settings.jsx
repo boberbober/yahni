@@ -3,7 +3,7 @@ import React from 'react'
 import { useRecoilState } from 'recoil'
 import produce from 'immer'
 
-import { settingsAtom } from '../utils/atoms'
+import { settingsAtom, lastMaxItemSelector } from '../utils/atoms'
 
 
 const THEMES = {
@@ -30,6 +30,7 @@ const STORYITEMS = [
 	['comments', 'comments'],
 	['date', 'date'],
 	['user', 'user'],
+	['domain', 'domain'],
 ]
 
 
@@ -37,6 +38,7 @@ export default function Settings() {
 
 	const [showSettings, setShowSettings] = React.useState(true)
 	const [settings, setSettings] = useRecoilState(settingsAtom)
+	const [lastMaxItem, setLastMaxItem] = useRecoilState(lastMaxItemSelector)
 
 	const handleChange = ({ target }) => {
 		setSettings(produce(settings, draft => {
@@ -107,6 +109,14 @@ export default function Settings() {
 				/> { label }
 			</label>
 		)}
+
+
+		<input type='number'
+			defaultValue={lastMaxItem}
+			onBlur={event => {
+				localStorage.setItem('lastMaxItem', parseInt(event.target.value))
+			}}
+		/>
 
 	</div>
 }

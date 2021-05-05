@@ -50,6 +50,8 @@ export default function StoryPage() {
 			{ story.title }
 		</h1>
 
+		<p>{ storyId }</p>
+
 		{ story.url &&
 			<p>
 				<a href={story.url}>{story.url}</a>

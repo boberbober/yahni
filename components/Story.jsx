@@ -82,7 +82,7 @@ export default function Story({ storyId }) {
 			href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
 		>
 			<span className='sTitle'>{ story.title }</span>
-			{ story.url &&
+			{ (story.url && !hideStoryItems.domain) &&
 				<small className='sUrl'>({ cleanUrl(story.url) })</small> }
 		</a>
 

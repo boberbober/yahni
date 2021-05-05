@@ -18,6 +18,10 @@ export const lastMaxItemSelector = selector({
 		}
 		return lastMaxItem || null
 	},
+	// set: ({ set }, value) => {
+	// 	localStorage.setItem('lastMaxItem', value)
+	// 	set(value)
+	// }
 })
 
 export const storyItemSelector = selectorFamily({
