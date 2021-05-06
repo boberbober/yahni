@@ -48,7 +48,7 @@ export default function Stories({ type }) {
 
 	const handleUpdate = React.useCallback(snap => {
 		const stories = snap.val()
-		console.log(type, 'update')
+		console.log(type, stories)
 		setStories(stories)
 		// setLastUpdate(Date.now())
 	}, [dbConnected])
@@ -97,7 +97,9 @@ export default function Stories({ type }) {
 
 			<ul id='StoriesList'>
 				{ orderedStories.map(id => 
+					// <li key={id}>{id}</li>
 					<Story key={id} storyId={id} />
+
 				)}
 			</ul>
 

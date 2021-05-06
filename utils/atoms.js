@@ -61,6 +61,11 @@ export const storyItemsAtom = atomFamily({
 	default: null
 })
 
+export const storyAtom = atomFamily({
+	key: 'story',
+	default: null
+})
+
 export const storyItemSelector = selectorFamily({
 	key: 'storyItem',
 	get: storyId => async ({ get }) => {

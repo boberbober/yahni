@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
 import cn from 'classnames'
 
 import Time from './Time'
+import { db } from '../utils/firebase'
 
 import { 
 	lastMaxItemSelector, 
@@ -11,6 +12,7 @@ import {
 	storyItemSelector,
 	settingsAtom,
 	openedStorySelector,
+	storyAtom,
 } from '../utils/atoms'
 
 
@@ -21,23 +23,42 @@ const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 export default function Story({ storyId }) {
 
 	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
-	const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
+	const [story, setStory] = useRecoilState(storyAtom(storyId))
+	// const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
 	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const { linkNewTab, hideStoryItems } = useRecoilValue(settingsAtom)
 	const openedStory = useRecoilValue(openedStorySelector(storyId))
 	
-	if (loadable.state === 'loading')
-		return <li className='story sLoading'>
-			<span className='sLink'>loading...</span>
-			<p className='sSub'>...</p>
-		</li>
+	// if (loadable.state === 'loading')
+	// 	return <li className='story sLoading'>
+	// 		<span className='sLink'>loading...</span>
+	// 		<p className='sSub'>...</p>
+	// 	</li>
 
-	if (loadable.state === 'hasError') {
-		// console.warn('story hasError', storyId)
-		return <li>error</li>
-	}
+	// if (loadable.state === 'hasError') {
+	// 	// console.warn('story hasError', storyId)
+	// 	return <li>error</li>
+	// }
 
-	const story = loadable.contents  
+	// const story = loadable.contents  
+
+	React.useEffect(() => {
+
+		async function fetchStory() {
+			try {
+				console.log('fetchStory')
+				const snap = await db.child(`item/${storyId}`).get()
+				setStory(snap.val())
+			} catch (error) {
+				console.warn("couldn't fetch story", storyId, error)
+			}
+		}
+
+		if (story === null) {
+			fetchStory()
+		}
+
+	}, [story])
 
 	if (!story) { 
 		// console.warn('no story', storyId)
@@ -52,7 +73,7 @@ export default function Story({ storyId }) {
 	}
 	
 	return <li 
-		key={`${storyId}-${story.descendants}-${story.score}`}
+		// key={`${storyId}-${story.descendants}-${story.score}`}
 		className={cn(`story s-${story.type}`, {
 			sNew: lastMaxItem < storyId,
 			sOpen: openStoryId === storyId,
