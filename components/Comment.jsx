@@ -1,19 +1,10 @@
 
 import React from 'react'
-import { selectorFamily, useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
-import cn from 'classnames'
+import { useRecoilValueLoadable } from 'recoil'
 
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-dayjs.extend(relativeTime)
-
-import { commentSelector, lastMaxItemSelector, openStoryIdAtom, storyItemSelector } from '../utils/atoms'
-
-
-function fixCommentHtml(text) {
-
-	return text.replace(/(^|<p>|<i>)&gt; ?/g, '<p class="cQuot">').replace(/`(.+?)`/g, `<code>$1</code>`)
-}
+import { commentSelector } from '../utils/atoms'
+import UserText from './UserText'
+import Time from './Time'
 
 
 export default function Comment({ id }) {
@@ -48,7 +39,7 @@ export default function Comment({ id }) {
 		<p className='cHead'>
 			<span className='cBy'>{comment.by}</span>
 			<a className='cUrl' href={`https://news.ycombinator.com/item?id=${id}`}>
-				{ dayjs.unix(comment.time).fromNow() }
+				<Time time={comment.time} />
 			</a>
 			{ comment.kids &&
 				<button onClick={handleToggle}>
@@ -57,18 +48,8 @@ export default function Comment({ id }) {
 			}
 		</p>
 
-		<div className='cText'
-			dangerouslySetInnerHTML={{__html: fixCommentHtml(comment.text)}} 
-		/>
-		{/* <details>
-			<summary>comment.text</summary>
-			{comment.text}
-		</details>
-		<details>
-			<summary>fixCommentHtml(comment.text)</summary>
-			{fixCommentHtml(comment.text)}
-		</details> */}
-
+		<UserText text={comment.text} />
+		
 		{ (showKids && !!comment.kids) && 
 			comment.kids.map(id =>
 				<Comment key={id} id={id} />

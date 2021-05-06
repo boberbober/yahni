@@ -1,13 +1,10 @@
 
 import React from 'react'
-import { selectorFamily, useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
-// import cn from 'classnames'
-
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-dayjs.extend(relativeTime)
+import { useRecoilState, useRecoilValueLoadable } from 'recoil'
 
 import Comments from './Comments'
+import Time from './Time'
+import UserText from './UserText'
 
 import { 
 	openedStorySelector, 
@@ -16,12 +13,9 @@ import {
 } from '../utils/atoms'
 
 
-// const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
-
 
 export default function StoryPage() {
 
-	// const lastMaxItem = useRecoilValue(lastMaxItemSelector)
 	const [storyId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
 	const [openedStory, setOpenedStory] = useRecoilState(openedStorySelector(storyId))
@@ -48,12 +42,7 @@ export default function StoryPage() {
 		setOpenedStory(story.descendants || 0)
 	}, [setOpenedStory])
 	
-	return <div id='StoryPage'
-		// className={cn(`story s-${story.type}`, {
-		// 	sNew: lastMaxItem < storyId,
-		// 	sOpen: openStoryId === storyId
-		// })}
-	>
+	return <div id='StoryPage'>
 
 		<button onClick={() => setOpenStoryId(null)}>close</button>
 
@@ -67,23 +56,28 @@ export default function StoryPage() {
 
 		{ story.url &&
 			<p>
-				<a href={story.url}>{story.url}</a>
+				<a href={story.url} rel='noopener'>
+					{story.url}
+				</a>
 			</p>
 		}
 
 		<p>
-			<span>
-				{ dayjs.unix(story.time).fromNow() }
-			</span> by <span>
+			<Time time={story.time} /> by <span>
 				{ story.by }
 			</span>
 		</p>
 
 		<p>
-			<a href={`https://news.ycombinator.com/item?id=${storyId}`}>
+			<a href={`https://news.ycombinator.com/item?id=${storyId}`}
+				rel='noopener'
+			>
 				read on HackerNews
 			</a>
 		</p>
+
+		{ story.text &&
+			<UserText text={story.text} /> }
 
 		{ story.type !== 'job' &&  <>
 
@@ -100,11 +94,6 @@ export default function StoryPage() {
 			</h4>
 
 		</>}
-
-		{ story.text &&
-			<div dangerouslySetInnerHTML={{__html: story.text}} /> }
-
-		{/* <pre>{ JSON.stringify(story, null, 2) }</pre> */}
 
 		<Comments story={story} />
 

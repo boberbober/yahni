@@ -1,5 +1,4 @@
 
-
 #Stories
 	flex: 1
 	overflow-y: auto
@@ -23,6 +22,8 @@
 	// margin-bottom: 1em
 
 .story
+	--commentsBgr: var(--bgrAltColor)
+	--commentsText: var(--textColor)
 	margin-bottom: 1em
 	display: grid
 	grid-template-columns: repeat(2, var(--numColWidth)) 1fr
@@ -43,8 +44,7 @@
 		
 .sNew
 	.sLink
-		// font-weight: bold
-		color: #2aa198
+		color: var(--newColor)
 		&:visited
 			color: var(--visitedColor)
 
@@ -54,14 +54,12 @@
 		color: var(--activeColor)
 
 .sScore
-	// grid-area: 1/1/3/2
 	grid-row: 1 / span 2
 	justify-self: end
 	padding: .2em
 	font-size: small
 
 .sComments
-	// grid-area: 1/2/3/3
 	grid-row: 1 / span 2
 	border: none
 	padding: .2em .5em
@@ -70,17 +68,17 @@
 	font-size: small
 	border-radius: .25em
 	position: relative
-	color: inherit
-	--bgrColor: var(--bgrAltColor)
-	background: var(--bgrColor)
+	color: var(--commentsText)
+	background: var(--commentsBgr)
 	&.scOpened
-		--bgrColor: var(--buttonColor)
+		--commentsBgr: var(--buttonColor)
 	&.scHasNew
-		--bgrColor: var(--activeColor)
+		--commentsBgr: var(--newColor)
+		--commentsText: var(--bgrAltColor)
 	&:hover,
 	&:active
 		background: var(--linkColor)
-		color: var(--bgrColor)
+		color: var(--commentsBgr)
 		border: none
 		&:after
 			border-top-color: var(--linkColor)
@@ -89,33 +87,26 @@
 		content: ''
 		position: absolute
 		bottom: calc(var(--size) * -1)
-		// left: calc(50% - calc(var(--size)/2))
 		right: .5em
 		width: 0
 		height: 0
 		border: var(--size) solid transparent
-		border-top-color: var(--bgrColor)
+		border-top-color: var(--commentsBgr)
 		border-bottom: 0
 		border-right: 0
 
 .sLink
-	// grid-area: 1/3/2/4
 	justify-self: start
 	small
 		color: inherit
 
 .sUrl
 	margin-left: 1em
-	font-weight: normal
 
 .sSub
-	// grid-area: 2/3/3/4
 	grid-row: 2 / span 1
 	margin: 0
 	font-size: small
-
-// .sDate
-	// margin-right: .35em
 
 
 #moreStoriesButton

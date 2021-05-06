@@ -3,9 +3,7 @@ import React from 'react'
 import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
 import cn from 'classnames'
 
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-dayjs.extend(relativeTime)
+import Time from './Time'
 
 import { 
 	lastMaxItemSelector, 
@@ -44,7 +42,9 @@ export default function Story({ storyId }) {
 	if (!story) { 
 		// console.warn('no story', storyId)
 		return <li>
-			<a href={`https://news.ycombinator.com/item?id=${storyId}`}>
+			<a href={`https://news.ycombinator.com/item?id=${storyId}`}
+				rel='noopener'
+			>
 				#{storyId}
 			</a>
 		</li>
@@ -85,6 +85,7 @@ export default function Story({ storyId }) {
 		<a 
 			className='sLink'
 			target={linkNewTab ? '_blank' : '_self'}
+			rel='noopener'
 			href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
 		>
 			<span className='sTitle'>{ story.title }</span>
@@ -97,9 +98,8 @@ export default function Story({ storyId }) {
 			<p className='sSub'>
 
 				{ !hideStoryItems.date && <>
-					<span className='sDate'>
-						{ dayjs.unix(story.time).fromNow() }
-					</span>{' '}
+					<Time time={story.time} />
+					{' '}
 				</>}
 
 				{ !hideStoryItems.user && <>
