@@ -11,7 +11,7 @@ export default function Time({ time }) {
 	const dayTime = dayjs.unix(time)
 
 	return <time 
-		datetime={dayTime.toISOString()}
+		dateTime={dayTime.toISOString()}
 	>
 		{ dayTime.fromNow() }
 	</time>

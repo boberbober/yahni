@@ -42,6 +42,7 @@ export default function Story({ storyId }) {
 	if (!story) { 
 		// console.warn('no story', storyId)
 		return <li>
+			<button onClick={() => setOpenStoryId(storyId)}>open</button>
 			<a href={`https://news.ycombinator.com/item?id=${storyId}`}
 				rel='noopener'
 			>

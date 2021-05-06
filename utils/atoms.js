@@ -29,14 +29,14 @@ const storageEffect = (prefix, key = '') => ({ trigger, setSelf, onSet }) => {
 	const storageKey = `${prefix}_${key}`
 
 	if (trigger === 'get') {
-		console.log('storage effect get', prefix, key)
+		// console.log('storage effect get', prefix, key)
 		const savedValue = loadFromStorage(storageKey)
 		if (savedValue !== null)
 			setSelf(savedValue)
 	}
 
 	onSet(value => {
-		console.log('storage effect set', key, value)
+		// console.log('storage effect set', key, value)
 		if (!(value instanceof DefaultValue))
 			saveToStorage(storageKey, value)
 	})
@@ -55,17 +55,43 @@ export const storiesAtom = atomFamily({
 	default: []
 })
 
+
+export const storyItemsAtom = atomFamily({
+	key: 'storyItems',
+	default: null
+})
+
 export const storyItemSelector = selectorFamily({
 	key: 'storyItem',
-	get: storyId => async () => {
+	get: storyId => async ({ get }) => {
+		const story = get(storyItemsAtom(storyId))
+		if (story)
+			return story
 		try {
+			console.log('load story')
 			const snap = await db.child(`item/${storyId}`).get()
 			return snap.val()
 		} catch (error) {
 			return null
 		}
+	},
+	set: storyId => ({ set }, story) => {
+		console.log(storyId, story)
+		set(storyItemsAtom(storyId), story)
 	}
 })
+// export const storyItemSelector = selectorFamily({
+// 	key: 'storyItem',
+// 	get: storyId => async () => {
+// 		try {
+// 			const snap = await db.child(`item/${storyId}`).get()
+// 			return snap.val()
+// 		} catch (error) {
+// 			return null
+// 		}
+// 	},
+// })
+
 
 export const openStoryIdAtom = atom({
 	key: 'openStoryId',

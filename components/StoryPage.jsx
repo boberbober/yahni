@@ -1,7 +1,8 @@
 
 import React from 'react'
-import { useRecoilState, useRecoilValueLoadable } from 'recoil'
+import { useRecoilCallback, useRecoilState, useRecoilValueLoadable } from 'recoil'
 
+import { db } from '../utils/firebase'
 import Comments from './Comments'
 import Time from './Time'
 import UserText from './UserText'
@@ -19,34 +20,50 @@ export default function StoryPage() {
 	const [storyId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
 	const [openedStory, setOpenedStory] = useRecoilState(openedStorySelector(storyId))
-	
-	if (loadable.state === 'loading')
-		return <li className='story sLoading'>
-			<span className='sLink'>loading...</span>
-			<p className='sSub'>...</p>
-		</li>
 
+
+	const refresh = useRecoilCallback(({ set }) => async (id) => {
+		console.log('refetch story', storyId, id)
+		const snap = await db.child(`item/${storyId}`).get()
+		const val = snap.val()
+		console.log(val)
+		set(storyItemSelector(storyId), val || null)
+	})
+
+	// React.useEffect(() => {
+	// 	const intervalId = setInterval(refresh, 2000)
+	// 	return () => clearInterval(intervalId)
+	// }, [refresh])
+
+	const story = loadable.state === 'hasValue' ? loadable.contents : null
+
+	React.useEffect(() => {
+		if (story) {
+			console.log('save opened story status')
+			setOpenedStory(story.descendants || 0)
+		}
+	}, [setOpenedStory, story])
+	
 	if (loadable.state === 'hasError') {
 		console.warn('story hasError', storyId)
 		return <li>error</li>
 	}
 
-	const story = loadable.contents
+	if (loadable.state === 'loading')
+		return <div id='StoryPage'>Loading...</div>
 
 	if (!story) { 
 		console.warn('no story', storyId)
-		return <li>#{storyId}</li>
+		return null
 	}
-
-	React.useEffect(() => {
-		setOpenedStory(story.descendants || 0)
-	}, [setOpenedStory])
 	
 	return <div id='StoryPage'>
 
 		<button onClick={() => setOpenStoryId(null)}>close</button>
 
 		<p>story opened: {JSON.stringify(openedStory)}</p>
+
+		<button onClick={() => refresh()}>refresh</button>
 
 		<h1>
 			{ story.title }
