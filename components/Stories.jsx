@@ -48,31 +48,26 @@ export default function Stories({ type }) {
 
 	const handleUpdate = React.useCallback(snap => {
 		const stories = snap.val()
+		console.log(type, 'update')
 		setStories(stories)
-		console.log('update')
 		// setLastUpdate(Date.now())
 	}, [dbConnected])
 
 	React.useEffect(() => {
 		
-		if (!dbConnected || !db)
-			return
+		if (!dbConnected || !db) return
 
-		function unsubscribe() {
-			db.off()
-		}
 		db.child(`/${type}stories`).on('value', handleUpdate)
 
 		async function setLastMaxItem() {
 			try {
 				const maxitem = await db.child('/maxitem').once('value')
-				// console.log('maxitem', maxitem.val())
 				localStorage.setItem('lastMaxItem', maxitem.val())
 			} catch (error) { console.error(error) }	
 		}
 		setLastMaxItem()
 		
-		return unsubscribe
+		return () => db.child(`/${type}stories`).off()
 
 	}, [dbConnected])
 

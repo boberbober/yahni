@@ -52,6 +52,7 @@ export default function Story({ storyId }) {
 	}
 	
 	return <li 
+		key={`${storyId}-${story.descendants}-${story.score}`}
 		className={cn(`story s-${story.type}`, {
 			sNew: lastMaxItem < storyId,
 			sOpen: openStoryId === storyId,

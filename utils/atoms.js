@@ -64,9 +64,9 @@ export const storyItemsAtom = atomFamily({
 export const storyItemSelector = selectorFamily({
 	key: 'storyItem',
 	get: storyId => async ({ get }) => {
-		const story = get(storyItemsAtom(storyId))
-		if (story)
-			return story
+		// const story = get(storyItemsAtom(storyId))
+		// if (story)
+		// 	return story
 		try {
 			console.log('load story')
 			const snap = await db.child(`item/${storyId}`).get()
@@ -76,8 +76,8 @@ export const storyItemSelector = selectorFamily({
 		}
 	},
 	set: storyId => ({ set }, story) => {
-		console.log(storyId, story)
-		set(storyItemsAtom(storyId), story)
+		console.log('story selector set (disabled)', storyId, story)
+		// set(storyItemsAtom(storyId), story)
 	}
 })
 // export const storyItemSelector = selectorFamily({
