@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
+import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil'
 import cn from 'classnames'
 
 import Time from './Time'
@@ -9,45 +9,36 @@ import { db } from '../utils/firebase'
 import { 
 	lastMaxItemSelector, 
 	openStoryIdAtom, 
-	storyItemSelector,
 	settingsAtom,
 	openedStorySelector,
 	storyAtom,
+	visitedLinksAtom,
 } from '../utils/atoms'
 
 
-
-const cleanUrl = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
+const urlDomain = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 
 
 export default function Story({ storyId }) {
 
 	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
 	const [story, setStory] = useRecoilState(storyAtom(storyId))
-	// const loadable = useRecoilValueLoadable(storyItemSelector(storyId))
 	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const { linkNewTab, hideStoryItems } = useRecoilValue(settingsAtom)
 	const openedStory = useRecoilValue(openedStorySelector(storyId))
 	
-	// if (loadable.state === 'loading')
-	// 	return <li className='story sLoading'>
-	// 		<span className='sLink'>loading...</span>
-	// 		<p className='sSub'>...</p>
-	// 	</li>
-
-	// if (loadable.state === 'hasError') {
-	// 	// console.warn('story hasError', storyId)
-	// 	return <li>error</li>
-	// }
-
-	// const story = loadable.contents  
+	const handleOpenLink = useRecoilCallback(({ set }) => event => {
+		set(visitedLinksAtom, prev => ({ 
+			...prev, 
+			[storyId]: Date.now()
+		}))
+	})
 
 	React.useEffect(() => {
 		async function fetchStory() {
 			try {
 				console.log('fetchStory')
 				const snap = await db.child(`item/${storyId}`).get()
-				// console.log(snap.val())
 				setStory(snap.val())
 			} catch (error) {
 				console.warn("couldn't fetch story", storyId, error)
@@ -57,7 +48,7 @@ export default function Story({ storyId }) {
 			fetchStory()
 	}, [story])
 
-	if (!story)
+	if (!story) {
 		return <li className='story sLoading'>
 			{ !hideStoryItems.score &&
 				<span className='sScore'>_</span> }
@@ -67,18 +58,7 @@ export default function Story({ storyId }) {
 			{ (!hideStoryItems.date || !hideStoryItems.user) &&
 				<p className='sSub'>...</p> }
 		</li>
-
-	// if (!story) { 
-	// 	// console.warn('no story', storyId)
-	// 	return <li>
-	// 		<button onClick={() => setOpenStoryId(storyId)}>open</button>
-	// 		<a href={`https://news.ycombinator.com/item?id=${storyId}`}
-	// 			rel='noopener'
-	// 		>
-	// 			#{storyId}
-	// 		</a>
-	// 	</li>
-	// }
+	}
 	
 	return <li 
 		className={cn(`story s-${story.type}`, {
@@ -117,10 +97,11 @@ export default function Story({ storyId }) {
 			target={linkNewTab ? '_blank' : '_self'}
 			rel='noopener'
 			href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
+			onClick={handleOpenLink}
 		>
 			<span className='sTitle'>{ story.title }</span>
 			{ (story.url && !hideStoryItems.domain) &&
-				<small className='sUrl'>({ cleanUrl(story.url) })</small> }
+				<small className='sUrl'>({ urlDomain(story.url) })</small> }
 		</a>
 
 

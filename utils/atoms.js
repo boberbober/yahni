@@ -150,6 +150,8 @@ export const lastMaxItemSelector = selector({
 })
 
 
+// Opened stories
+
 export const openedStoriesAtom = atom({
 	key: 'openedStories',
 	default: {},
@@ -172,6 +174,31 @@ export const openedStorySelector = selectorFamily({
 		}))
 	}
 })
+
+// Visited links
+
+export const visitedLinksAtom = atom({
+	key: 'visitedLinks',
+	default: {},
+	effects_UNSTABLE: [storageEffect('visitedLinks')]
+})
+
+// export const openedStorySelector = selectorFamily({
+// 	key: 'openedStory',
+// 	default: null,
+// 	get: id => ({ get }) => {
+// 		const openedStories = get(openedStoriesAtom)
+// 		return openedStories[id] || null
+// 	},
+// 	set: id => ({ set }, desc) => {
+// 		set(openedStoriesAtom, prev => produce(prev, draft => {
+// 			draft[id] = {
+// 				time: Date.now(),
+// 				desc,
+// 			}
+// 		}))
+// 	}
+// })
 
 
 
