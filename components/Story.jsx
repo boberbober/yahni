@@ -43,37 +43,44 @@ export default function Story({ storyId }) {
 	// const story = loadable.contents  
 
 	React.useEffect(() => {
-
 		async function fetchStory() {
 			try {
 				console.log('fetchStory')
 				const snap = await db.child(`item/${storyId}`).get()
+				// console.log(snap.val())
 				setStory(snap.val())
 			} catch (error) {
 				console.warn("couldn't fetch story", storyId, error)
 			}
 		}
-
-		if (story === null) {
+		if (story === null)
 			fetchStory()
-		}
-
 	}, [story])
 
-	if (!story) { 
-		// console.warn('no story', storyId)
-		return <li>
-			<button onClick={() => setOpenStoryId(storyId)}>open</button>
-			<a href={`https://news.ycombinator.com/item?id=${storyId}`}
-				rel='noopener'
-			>
-				#{storyId}
-			</a>
+	if (!story)
+		return <li className='story sLoading'>
+			{ !hideStoryItems.score &&
+				<span className='sScore'>_</span> }
+			{ !hideStoryItems.comments &&
+				<button className='sComments'>_</button> }
+			<span className='sLink'>...</span>
+			{ (!hideStoryItems.date || !hideStoryItems.user) &&
+				<p className='sSub'>...</p> }
 		</li>
-	}
+
+	// if (!story) { 
+	// 	// console.warn('no story', storyId)
+	// 	return <li>
+	// 		<button onClick={() => setOpenStoryId(storyId)}>open</button>
+	// 		<a href={`https://news.ycombinator.com/item?id=${storyId}`}
+	// 			rel='noopener'
+	// 		>
+	// 			#{storyId}
+	// 		</a>
+	// 	</li>
+	// }
 	
 	return <li 
-		// key={`${storyId}-${story.descendants}-${story.score}`}
 		className={cn(`story s-${story.type}`, {
 			sNew: lastMaxItem < storyId,
 			sOpen: openStoryId === storyId,

@@ -26,11 +26,12 @@ export default function Stories({ type }) {
 	const [stories, setStories] = useRecoilState(storiesAtom(type))
 	const [start] = React.useState(0)
 	const [end, setEnd] = React.useState(STORIESPERPAGE)
-	const storiesLen = stories.length
 	const [latestOrder, setLatestOrder] = useRecoilState(orderAtom(type))
 	const orderedStories = useRecoilValue(orderedStoriesSelector({ type, start, end }))
+	const storiesLen = stories.length
 	const openStoryId = useRecoilValue(openStoryIdAtom)
 	const { infiniteScroll } = useRecoilValue(settingsAtom)
+	const initLoaded = React.useRef(false)
 
 	const scrollRef = useBottomScrollListener(() => infiniteScroll && nextPage(),
 		{ debounce: 200, offset: 100, triggerOnNoScroll: false }
@@ -38,7 +39,7 @@ export default function Stories({ type }) {
 
 	const nextPage = () => {
 		const nextEnd = end + STORIESPERPAGE
-		if (nextEnd > storiesLen) return
+		if (end > storiesLen) return
 		setEnd(nextEnd)
 	}
 	
@@ -46,16 +47,20 @@ export default function Stories({ type }) {
 		setLatestOrder(event.target.checked)
 	}
 
-	const handleUpdate = React.useCallback(snap => {
-		const stories = snap.val()
-		console.log(type, stories)
-		setStories(stories)
-		// setLastUpdate(Date.now())
-	}, [dbConnected])
-
 	React.useEffect(() => {
 		
 		if (!dbConnected || !db) return
+
+		const handleUpdate = snap => {
+			const stories = snap.val()
+			console.log('stories update:', type, initLoaded.current)
+			if (!initLoaded.current || type !== 'new') {
+				initLoaded.current = true
+				setStories(stories)
+			} else {
+				setTimeout(() => setStories(stories), 10000)
+			}
+		}
 
 		db.child(`/${type}stories`).on('value', handleUpdate)
 
