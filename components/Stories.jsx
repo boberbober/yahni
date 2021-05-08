@@ -58,7 +58,7 @@ export default function Stories({ type }) {
 				initLoaded.current = true
 				setStories(stories)
 			} else {
-				setTimeout(() => setStories(stories), 10000)
+				setTimeout(() => setStories(stories), 12000)
 			}
 		}
 

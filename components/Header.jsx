@@ -25,7 +25,7 @@ export default function Header() {
 	return <header>
 		
 		<Link href='/'>
-			<a id='logo'>YAHNI</a>
+			<a id='logo'>YA<strong>HN</strong>I</a>
 		</Link>
 
 		<nav>
@@ -34,10 +34,6 @@ export default function Header() {
 					<a>{label}</a>
 				</NavLink>
 			)} 
-
-			<Link href='/opened'>
-				<a>opened</a>
-			</Link>
 
 		</nav>
 

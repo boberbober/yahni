@@ -1,7 +1,7 @@
 
 import React from 'react'
-import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil'
 import cn from 'classnames'
+import { useRecoilState, useRecoilValue } from 'recoil'
 
 import Time from './Time'
 import { db } from '../utils/firebase'
@@ -12,7 +12,7 @@ import {
 	settingsAtom,
 	openedStorySelector,
 	storyAtom,
-	visitedLinksAtom,
+	// visitedLinksAtom,
 } from '../utils/atoms'
 
 
@@ -27,12 +27,12 @@ export default function Story({ storyId }) {
 	const { linkNewTab, hideStoryItems } = useRecoilValue(settingsAtom)
 	const openedStory = useRecoilValue(openedStorySelector(storyId))
 	
-	const handleOpenLink = useRecoilCallback(({ set }) => event => {
-		set(visitedLinksAtom, prev => ({ 
-			...prev, 
-			[storyId]: Date.now()
-		}))
-	})
+	// const handleOpenLink = useRecoilCallback(({ set }) => event => {
+	// 	set(visitedLinksAtom, prev => ({ 
+	// 		...prev, 
+	// 		[storyId]: Date.now()
+	// 	}))
+	// })
 
 	React.useEffect(() => {
 		async function fetchStory() {
@@ -97,7 +97,7 @@ export default function Story({ storyId }) {
 			target={linkNewTab ? '_blank' : '_self'}
 			rel='noopener'
 			href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
-			onClick={handleOpenLink}
+			// onClick={handleOpenLink}
 		>
 			<span className='sTitle'>{ story.title }</span>
 			{ (story.url && !hideStoryItems.domain) &&
