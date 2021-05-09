@@ -2,6 +2,7 @@
 import React from 'react'
 import cn from 'classnames'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import Link from 'next/link'
 
 import Time from './Time'
 import { db } from '../utils/firebase'
@@ -73,7 +74,9 @@ export default function Story({ storyId }) {
 			
 			{ !hideStoryItems.score &&
 				<span className='sScore'>
-					{ story.score }
+					<Link href={`#${storyId}`}>
+						<a>{ story.score }</a>
+					</Link>
 				</span>
 			}
 
