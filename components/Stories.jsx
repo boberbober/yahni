@@ -108,7 +108,7 @@ export default function Stories({ type }) {
 	// }, [])
 
 
-	return <main id='MainStories'>
+	return <main id='MainStories' className={!!openStoryId ? 'storyOpened' : 'storyClosed'}>
 
 		<Helmet>
 			<title>{type}</title>

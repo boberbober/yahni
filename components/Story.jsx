@@ -95,17 +95,21 @@ export default function Story({ storyId }) {
 		</>}
 
 
-		<a 
-			className='sLink'
-			target={linkNewTab ? '_blank' : '_self'}
-			rel='noopener'
-			href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
-			// onClick={handleOpenLink}
-		>
-			<span className='sTitle'>{ story.title }</span>
-			{ (story.url && !hideStoryItems.domain) &&
-				<small className='sUrl'>({ urlDomain(story.url) })</small> }
-		</a>
+		{ story.url
+			?	<a 
+					className='sLink'
+					target={linkNewTab ? '_blank' : '_self'}
+					rel='noopener'
+					href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
+					// onClick={handleOpenLink}
+				>
+					<span className='sTitle'>{ story.title }</span>
+					{ (story.url && !hideStoryItems.domain) && <> <small className='sUrl'>({ urlDomain(story.url) })</small></> }
+				</a>
+			:	<Link href={`#${storyId}`}>
+					<a className='sLink'>{ story.title }</a>
+				</Link>
+		}
 
 
 		{ (!hideStoryItems.date || !hideStoryItems.user) &&

@@ -5,9 +5,12 @@
 	padding: 1rem
 	border-left: .25em solid var(--bgrAltColor)
 
+
 #storyCloseButton
 	float: right
 	margin: 0 0 .5em 1em
+	position: sticky
+	top: 0em
 
 
 .storyLink
@@ -28,6 +31,8 @@
 	margin: .5em 0
 
 .userText
+	display: block
+	max-width: 36em
 	overflow-wrap: anywhere
 	> p // NOTE: the first paragraph is not wrapped in <p>
 		margin: .5em 0
@@ -59,6 +64,9 @@
 		margin-left: 1em
 	+ .comment
 		border-top-left-radius: .5em !important
+
+.cDeleted
+	padding: .5em 1em
 
 .cHead
 	display: flex

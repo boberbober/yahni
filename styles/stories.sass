@@ -1,6 +1,22 @@
 
-#Stories
+#MainStories
 	flex: 1
+	display: grid
+	min-height: 0
+	grid-template-columns: 1fr
+	&.storyOpened
+		grid-template-columns: 1fr 1fr
+
+@media (max-width: 1023px)
+	#MainStories
+		grid-template-columns: 1fr !important
+	#StoryPage
+		grid-area: 1 / 1 / 2 / 2
+		z-index: 10
+
+
+#Stories
+	grid-area: 1 / 1 / 2 / 2
 	overflow-y: auto
 	padding: 1rem
 	padding-bottom: 2em
@@ -110,8 +126,10 @@
 	small
 		color: inherit
 
-.sUrl
-	margin-left: 1em
+.sTitle
+	margin-right: .25em
+// .sUrl
+	// margin-left: 1em
 
 .sSub
 	grid-row: 2 / span 1

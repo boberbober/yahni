@@ -35,18 +35,21 @@ export default function Header() {
 					<a>{label}</a>
 				</NavLink>
 			)} 
-
 		</nav>
 
 		{/* <span id='dbConnected'>
 			{ dbConnected ? 'connected' : 'not connected' }
 		</span> */}
 
+		<Link href='/about'>
+			<a>About</a>
+		</Link>
+
 		<button 
 			id='settingsButton'
 			onClick={() => setShowSettings(prev => !prev)}
 		>
-			<Symbol id='settings' />Settings
+			<Symbol id='settings' /><span>Settings</span>
 		</button>
 
 		{ showSettings && <Settings /> }

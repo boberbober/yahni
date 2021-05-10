@@ -33,7 +33,9 @@ export default function Comment({ id }) {
 	}
 
 	if (comment.deleted)
-		return <div className='comment'><em>[deleted]</em></div>
+		return <div className='comment cDeleted'>
+			<em>[deleted]</em>
+		</div>
 
 	return <div className='comment'>
 

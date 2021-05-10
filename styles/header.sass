@@ -1,16 +1,17 @@
 
 header
 	display: flex
+	flex-wrap: wrap
 	margin: 0
 	padding: .5em 1em
-	align-items: baseline
+	align-items: center
 	background-color: var(--bgrAltColor)
 	a
 		color: var(--linkColor) !important
 
 
 #logo
-	margin-right: 1em
+	margin-right: 1.5em
 	color: var(--textColor) !important
 	border: 1px solid currentColor
 	padding: .25em .4em
@@ -23,6 +24,7 @@ header
 nav
 	display: flex
 	margin-right: auto
+	flex-wrap: wrap
 
 .navLink
 	margin-right: 1em
@@ -33,13 +35,13 @@ nav
 	&.selected
 		color: var(--activeColor) !important
 
-#dbConnected
-	margin-right: 1em
-	font-size: small
-
+// #dbConnected
+// 	margin-right: 1em
+// 	font-size: small
 
 #settingsButton
 	display: flex
 	align-items: center
+	margin-left: 1em
 	svg
 		margin-right: .25em
