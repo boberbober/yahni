@@ -7,9 +7,9 @@ function fixCommentHtml(text) {
 }
 
 
-export default function UserText({ text }) {
+export default function UserText({ text, className = '' }) {
 	return <div 
-		className='userText'
+		className={`userText ${className}`}
 		dangerouslySetInnerHTML={{__html: fixCommentHtml(text)}} 
 	/>
 }

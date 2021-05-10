@@ -5,6 +5,7 @@ import { useRecoilValueLoadable } from 'recoil'
 import { commentSelector } from '../utils/atoms'
 import UserText from './UserText'
 import Time from './Time'
+import Symbol from './Symbol'
 
 
 export default function Comment({ id }) {
@@ -37,13 +38,15 @@ export default function Comment({ id }) {
 	return <div className='comment'>
 
 		<p className='cHead'>
-			<span className='cBy'>{comment.by}</span>
+			<a className='cBy' href={`https://news.ycombinator.com/user?id=${comment.by}`}>
+				{comment.by}
+			</a>
 			<a className='cUrl' href={`https://news.ycombinator.com/item?id=${id}`}>
 				<Time time={comment.time} />
 			</a>
 			{ comment.kids &&
-				<button onClick={handleToggle}>
-					{ showKids ? "collapse" : "open" }		
+				<button className='cCollapse' onClick={handleToggle}>
+					<Symbol id={ showKids ? 'up' : 'down' } />
 				</button>
 			}
 		</p>

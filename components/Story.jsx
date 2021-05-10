@@ -74,22 +74,22 @@ export default function Story({ storyId }) {
 			
 			{ !hideStoryItems.score &&
 				<span className='sScore'>
-					<Link href={`#${storyId}`}>
-						<a>{ story.score }</a>
-					</Link>
+					{ story.score }
 				</span>
 			}
 
 			{ !hideStoryItems.comments &&
-				<button 
-					className={cn('sComments', { 
-						scOpened: !!openedStory,
-						scHasNew: openedStory?.desc < story.descendants,
-					})}
-					onClick={() => setOpenStoryId(storyId)}
-				>
-					{ story.descendants }
-				</button>
+				<Link href={`#${storyId}`}>
+					<a 
+						className={cn('sComments', { 
+							scOpened: !!openedStory,
+							scHasNew: openedStory?.desc < story.descendants,
+						})}
+						onClick={() => setOpenStoryId(storyId)}
+					>
+						{ story.descendants }
+					</a>
+				</Link>
 			}
 
 		</>}
@@ -118,7 +118,7 @@ export default function Story({ storyId }) {
 
 				{ !hideStoryItems.user && <>
 					<span className='sBy'>
-						by { story.by }
+						by <em>{ story.by }</em>
 					</span>
 				</>}
 

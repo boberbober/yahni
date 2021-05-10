@@ -59,48 +59,38 @@ export default function StoryPage() {
 	
 	return <div id='StoryPage'>
 
-		<button onClick={() => setOpenStoryId(null)}>close</button>
+		<button id='storyCloseButton'
+			onClick={() => setOpenStoryId(null)}
+		>
+			close
+		</button>
 
-		<p>story opened: {JSON.stringify(openedStory)}</p>
+		{/* <p>story opened: {JSON.stringify(openedStory)}</p> */}
 
-		<button onClick={() => refresh()}>refresh</button>
+		{/* <button onClick={() => refresh()}>refresh</button> */}
 
-		<h1>
-			{ story.title }
-		</h1>
-
-		<p>{ storyId }</p>
+		<h1>{ story.title }</h1>
 
 		{ story.url &&
-			<p>
-				<a href={story.url} rel='noopener'>
-					{story.url}
-				</a>
-			</p>
+			<a className='storyLink'
+				href={story.url} rel='noopener'
+			>
+				{story.url}
+			</a>
 		}
 
-		<p>
-			<Time time={story.time} /> by <span>
-				{ story.by }
-			</span>
-		</p>
-
-		<p>
-			<a href={`https://news.ycombinator.com/item?id=${storyId}`}
+		<p className='storyInfo'>
+			{ story.score } { story.score > 1 ? 'points' : 'point' } | <Time time={story.time} /> by <a className='storyBy' href={`https://news.ycombinator.com/user?id=${story.by}`}>{ story.by }</a> | <a href={`https://news.ycombinator.com/item?id=${storyId}`}
 				rel='noopener'
 			>
-				read on HackerNews
+				permalink
 			</a>
 		</p>
 
 		{ story.text &&
-			<UserText text={story.text} /> }
+			<UserText className='storyText' text={story.text} /> }
 
 		{ story.type !== 'job' &&  <>
-
-			<h3>
-				{ story.score } { story.score > 1 ? 'points' : 'point' }
-			</h3>
 
 			<h4>
 				{ !story.descendants ? "no comments"

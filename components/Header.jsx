@@ -1,11 +1,12 @@
 
 import React from 'react'
-import { useRecoilValue } from 'recoil'
+// import { useRecoilValue } from 'recoil'
 import Link from 'next/link'
 
-import { dbConnectedAtom } from '../utils/atoms'
+// import { dbConnectedAtom } from '../utils/atoms'
 import NavLink from './NavLink'
 import Settings from './Settings'
+import Symbol from './Symbol'
 
 const pages = [
 	['Top', ''],
@@ -19,7 +20,7 @@ const pages = [
 
 export default function Header() {
 
-	const dbConnected = useRecoilValue(dbConnectedAtom)
+	// const dbConnected = useRecoilValue(dbConnectedAtom)
 	const [showSettings, setShowSettings] = React.useState(false)
 
 	return <header>
@@ -37,11 +38,16 @@ export default function Header() {
 
 		</nav>
 
-		<span id='dbConnected'>
+		{/* <span id='dbConnected'>
 			{ dbConnected ? 'connected' : 'not connected' }
-		</span>
+		</span> */}
 
-		<button onClick={() => setShowSettings(prev => !prev)}>settings</button>
+		<button 
+			id='settingsButton'
+			onClick={() => setShowSettings(prev => !prev)}
+		>
+			<Symbol id='settings' />Settings
+		</button>
 
 		{ showSettings && <Settings /> }
 
