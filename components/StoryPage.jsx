@@ -12,6 +12,7 @@ import {
 	openStoryIdAtom, 
 	storyAtom, 
 } from '../utils/atoms'
+import fetchItem from '../utils/fetchItem'
 
 
 
@@ -20,7 +21,6 @@ export default function StoryPage() {
 	const [storyId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const setOpenedStory = useSetRecoilState(openedStorySelector(storyId))
 	const [story, setStory] = useRecoilState(storyAtom(storyId))
-
 
 	// const refresh = useRecoilCallback(({ set }) => async (id) => {
 	// 	console.log('refetch story', storyId, id)
@@ -38,17 +38,8 @@ export default function StoryPage() {
 	// const story = loadable.state === 'hasValue' ? loadable.contents : null
 
 	React.useEffect(() => {
-		async function fetchStory() {
-			try {
-				console.log('fetchStory')
-				const snap = await db.child(`item/${storyId}`).get()
-				setStory(snap.val())
-			} catch (error) {
-				console.warn("couldn't fetch story", storyId, error)
-			}
-		}
 		if (story === null)
-			fetchStory()
+			fetchItem(storyId, setStory)
 	}, [story])
 
 

@@ -31,12 +31,9 @@ export default function Stories({ type }) {
 	const orderedStories = useRecoilValue(orderedStoriesSelector({ type, start, end }))
 	const storiesLen = stories.length
 	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
-	const { infiniteScroll } = useRecoilValue(settingsAtom)
+	const { liveUpdates, infiniteScroll } = useRecoilValue(settingsAtom)
 	const initLoaded = React.useRef(false)
 	const { asPath } = useRouter()
-	// const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
-
-	// console.log(router)
 
 	const scrollRef = useBottomScrollListener(() => infiniteScroll && nextPage(),
 		{ debounce: 200, offset: 100, triggerOnNoScroll: false }
@@ -52,11 +49,18 @@ export default function Stories({ type }) {
 		setLatestOrder(event.target.checked)
 	}
 
-
-
 	React.useEffect(() => {
+
+		async function setLastMaxItem() {
+			try {
+				const maxitem = await db.child('/maxitem').once('value')
+				localStorage.setItem('lastMaxItem', maxitem.val())
+			} catch (error) { console.error(error) }
+		}
+		setLastMaxItem()
 		
-		if (!dbConnected || !db) return
+		if (!dbConnected || !db || !liveUpdates) 
+			return
 
 		const handleUpdate = snap => {
 			const stories = snap.val()
@@ -68,23 +72,12 @@ export default function Stories({ type }) {
 				setTimeout(() => setStories(stories), 12000)
 			}
 		}
-
 		db.child(`/${type}stories`).on('value', handleUpdate)
-
-		async function setLastMaxItem() {
-			try {
-				const maxitem = await db.child('/maxitem').once('value')
-				localStorage.setItem('lastMaxItem', maxitem.val())
-			} catch (error) { console.error(error) }	
-		}
-		setLastMaxItem()
-		
 		return () => db.child(`/${type}stories`).off()
 
-	}, [dbConnected])
+	}, [dbConnected, liveUpdates])
 
 	React.useEffect(() => {
-		console.log('asPath', asPath)
 		const anchorMatch = asPath.match(/#(\d{8})$/)
 		const anchorId = parseInt(anchorMatch?.[1])
 		if (!!anchorId) {
@@ -92,21 +85,7 @@ export default function Stories({ type }) {
 		} else if (openStoryId) {
 			setOpenStoryId(null)
 		}
-		// console.log(parseInt(hashMatch[1]))
-		// console.log(!!hash)
 	}, [asPath])
-
-	
-
-
-	// React.useEffect(() => {
-	// 	function handleHashChange(url) {
-	// 		console.log(url)
-	// 	}
-	// 	router.events.on('hashChangeComplete', handleHashChange)
-	// 	return () => router.events.off('hashChangeComplete', handleHashChange)
-	// }, [])
-
 
 	return <main id='MainStories' className={!!openStoryId ? 'storyOpened' : 'storyClosed'}>
 
@@ -132,23 +111,16 @@ export default function Stories({ type }) {
 			}
 
 			<ul id='StoriesList'>
-				{ orderedStories.map(id => 
-					// <li key={id}>{id}</li>
-					<Story key={id} storyId={id} />
-
-				)}
+				{ orderedStories.map(id => <Story key={id} storyId={id} /> )}
 			</ul>
 
 			{ (!infiniteScroll && storiesLen > 0 && end < storiesLen) &&
-				<button 
-					id='moreStoriesButton'
+				<button id='moreStoriesButton'
 					onClick={() => nextPage()}
 				>
 					Load more
 				</button> 
 			}
-
-			{/* <p>({ start } - { end } / {storiesLen})</p> */}
 
 			{ (storiesLen > 0 && end >= storiesLen) &&
 				<p id='storiesEnd'>end</p> }

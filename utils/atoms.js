@@ -1,7 +1,7 @@
 
 import { atom, selector, selectorFamily, atomFamily, DefaultValue } from 'recoil'
 
-import { db } from '../utils/firebase'
+// import { db } from '../utils/firebase'
 import DEFAULTSETTINGS from '../utils/defaultSettings'
 import produce from 'immer'
 
@@ -55,36 +55,40 @@ export const storiesAtom = atomFamily({
 	default: []
 })
 
-
-export const storyItemsAtom = atomFamily({
-	key: 'storyItems',
-	default: null
-})
-
 export const storyAtom = atomFamily({
 	key: 'story',
 	default: null
 })
 
-export const storyItemSelector = selectorFamily({
-	key: 'storyItem',
-	get: storyId => async ({ get }) => {
-		// const story = get(storyItemsAtom(storyId))
-		// if (story)
-		// 	return story
-		try {
-			console.log('load story')
-			const snap = await db.child(`item/${storyId}`).get()
-			return snap.val()
-		} catch (error) {
-			return null
-		}
-	},
-	set: storyId => ({ set }, story) => {
-		console.log('story selector set (disabled)', storyId, story)
-		// set(storyItemsAtom(storyId), story)
-	}
+export const commentAtom = atomFamily({
+	key: 'comment',
+	default: null
 })
+
+
+// export const storyItemsAtom = atomFamily({
+// 	key: 'storyItems',
+// 	default: null
+// })
+// export const storyItemSelector = selectorFamily({
+// 	key: 'storyItem',
+// 	get: storyId => async ({ get }) => {
+// 		// const story = get(storyItemsAtom(storyId))
+// 		// if (story)
+// 		// 	return story
+// 		try {
+// 			console.log('load story')
+// 			const snap = await db.child(`item/${storyId}`).get()
+// 			return snap.val()
+// 		} catch (error) {
+// 			return null
+// 		}
+// 	},
+// 	set: storyId => ({ set }, story) => {
+// 		console.log('story selector set (disabled)', storyId, story)
+// 		// set(storyItemsAtom(storyId), story)
+// 	}
+// })
 // export const storyItemSelector = selectorFamily({
 // 	key: 'storyItem',
 // 	get: storyId => async () => {
@@ -116,17 +120,19 @@ export const orderedStoriesSelector = selectorFamily({
 	}
 })
 
-export const commentSelector = selectorFamily({
-	key: 'comment',
-	get: id => async () => {
-		try {
-			const snap = await db.child(`item/${id}`).get()
-			return snap.val()
-		} catch (error) {
-			return null
-		}
-	}
-})
+
+
+// export const commentSelector = selectorFamily({
+// 	key: 'comment',
+// 	get: id => async () => {
+// 		try {
+// 			const snap = await db.child(`item/${id}`).get()
+// 			return snap.val()
+// 		} catch (error) {
+// 			return null
+// 		}
+// 	}
+// })
 
 
 export const orderAtom = atomFamily({

@@ -17,9 +17,7 @@ export default function Comments({ story }) {
 	
 	return <div id='StoryComments'>
 
-		{ story.kids.map(id =>
-			<Comment key={id} id={id} />
-		)}
+		{ story.kids.map(id => <Comment key={id} commentId={id} /> )}
 
 	</div>
 }

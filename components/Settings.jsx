@@ -59,6 +59,14 @@ export default function Settings() {
 		
 		<label>
 			<input type='checkbox'
+				name='liveUpdates'
+				checked={settings.liveUpdates}
+				onChange={handleChange}
+			/> enable live updates
+		</label>
+
+		<label>
+			<input type='checkbox'
 				name='linkNewTab'
 				checked={settings.linkNewTab}
 				onChange={handleChange}

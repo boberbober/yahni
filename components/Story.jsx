@@ -15,6 +15,7 @@ import {
 	storyAtom,
 	// visitedLinksAtom,
 } from '../utils/atoms'
+import fetchItem from '../utils/fetchItem'
 
 
 const urlDomain = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
@@ -36,17 +37,8 @@ export default function Story({ storyId }) {
 	// })
 
 	React.useEffect(() => {
-		async function fetchStory() {
-			try {
-				console.log('fetchStory')
-				const snap = await db.child(`item/${storyId}`).get()
-				setStory(snap.val())
-			} catch (error) {
-				console.warn("couldn't fetch story", storyId, error)
-			}
-		}
 		if (story === null)
-			fetchStory()
+			fetchItem(storyId, setStory)
 	}, [story])
 
 	if (!story) {

@@ -28,7 +28,6 @@ export default function AppWrap({ Component, pageProps }) {
 		<UserData />
 
 		<Header />
-		
 		<Component {...pageProps} />
 
 		<Sprite />
