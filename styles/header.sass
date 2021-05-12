@@ -39,9 +39,55 @@ nav
 // 	margin-right: 1em
 // 	font-size: small
 
+#aboutLink
+	margin-left: 1em
+	font-size: small
+
 #settingsButton
 	display: flex
 	align-items: center
 	margin-left: 1em
 	svg
+		display: none
 		margin-right: .25em
+
+
+
+
+// Connection
+
+#Connection
+	line-height: 1
+	display: flex
+	align-items: center
+	&:hover
+		#connTooltip
+			display: block !important
+	
+.connOnline
+	&.connConnected
+		color: var(--textColor)
+	&.connConnecting
+		color: var(--linkColor)
+	&.connDisconnected
+		color: var(--activeColor)
+	&.connLive
+		color: var(--newColor)
+	
+#connTooltip
+	display: none
+	background: var(--bgrAltColor)
+	border: 1px solid var(--textColor)
+	position: absolute
+	border-radius: .25em
+	transform: translate(calc(-50% + .75em), calc(100% - 15%))
+	font-size: small
+	text-align: center
+	padding: .25em .5em
+
+#connStatus,
+#connLiveStatus
+	display: block
+
+#connStatus
+	font-variant: small-caps

@@ -90,7 +90,7 @@ export default function StoryPage() {
 			{ story.score } { story.score > 1 ? 'points' : 'point' } | <Time time={story.time} /> by <a className='storyBy' href={`https://news.ycombinator.com/user?id=${story.by}`}>{ story.by }</a> | <a href={`https://news.ycombinator.com/item?id=${storyId}`}
 				rel='noopener'
 			>
-				permalink
+				read on HN
 			</a>
 		</p>
 

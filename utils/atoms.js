@@ -47,7 +47,7 @@ const storageEffect = (prefix, key = '') => ({ trigger, setSelf, onSet }) => {
 
 export const dbConnectedAtom = atom({
 	key: `dbConnected`,
-	default: false
+	default: null
 })
 
 export const storiesAtom = atomFamily({

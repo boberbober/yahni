@@ -1,18 +1,16 @@
 
 import React from 'react'
-import { useRecoilValue } from 'recoil'
 import Link from 'next/link'
 
 import NavLink from './NavLink'
 import Settings from './Settings'
 import Symbol from './Symbol'
+import Connection from './Connection'
 import PAGES from '../utils/pages'
-import { dbConnectedAtom } from '../utils/atoms'
 
 
 export default function Header() {
 
-	const dbConnected = useRecoilValue(dbConnectedAtom)
 	const [showSettings, setShowSettings] = React.useState(false)
 
 	return <header>
@@ -29,12 +27,10 @@ export default function Header() {
 			)} 
 		</nav>
 
-		<span id='dbConnected'>
-			{ dbConnected ? 'connected' : 'not connected' }
-		</span>
+		<Connection />
 
 		<Link href='/about'>
-			<a>About</a>
+			<a id='aboutLink'>About</a>
 		</Link>
 
 		<button 
