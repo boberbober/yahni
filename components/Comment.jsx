@@ -19,21 +19,6 @@ export default function Comment({ commentId }) {
 			fetchItem(commentId, setComment)
 	}, [comment])
 
-	// if (loadable.state === 'loading')
-	// 	return 'loading...'
-
-	// if (loadable.state === 'hasError') {
-	// 	console.warn('comment hasError', commentId)
-	// 	return <li>error</li>
-	// }
-
-	// const comment = loadable.contents  
-
-	// if (!comment) { 
-	// 	console.warn('no comment', id)
-	// 	return <p>no comment {id}</p>
-	// }
-
 	if (!comment)
 		return <div className='comment cLoading'>
 			<em className='loading'>Loading...</em>

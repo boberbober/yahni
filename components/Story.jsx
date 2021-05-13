@@ -5,7 +5,6 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import Link from 'next/link'
 
 import Time from './Time'
-import { db } from '../utils/firebase'
 
 import { 
 	lastMaxItemSelector, 
@@ -13,7 +12,6 @@ import {
 	settingsAtom,
 	openedStorySelector,
 	storyAtom,
-	// visitedLinksAtom,
 } from '../utils/atoms'
 import fetchItem from '../utils/fetchItem'
 
@@ -29,13 +27,6 @@ export default function Story({ storyId }) {
 	const { linkNewTab, hideStoryItems } = useRecoilValue(settingsAtom)
 	const openedStory = useRecoilValue(openedStorySelector(storyId))
 	
-	// const handleOpenLink = useRecoilCallback(({ set }) => event => {
-	// 	set(visitedLinksAtom, prev => ({ 
-	// 		...prev, 
-	// 		[storyId]: Date.now()
-	// 	}))
-	// })
-
 	React.useEffect(() => {
 		if (story === null)
 			fetchItem(storyId, setStory)
@@ -69,9 +60,12 @@ export default function Story({ storyId }) {
 		{ story.type !== 'job' && <>
 			
 			{ !hideStoryItems.score &&
-				<span className='sScore'>
+				<a className='sScore'
+					target={linkNewTab ? '_blank' : '_self'}
+					href={`https://news.ycombinator.com/item?id=${storyId}`}
+				>
 					{ story.score }
-				</span>
+				</a>
 			}
 
 			{ !hideStoryItems.comments &&
@@ -97,10 +91,9 @@ export default function Story({ storyId }) {
 					target={linkNewTab ? '_blank' : '_self'}
 					rel='noopener'
 					href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
-					// onClick={handleOpenLink}
 				>
 					<span className='sTitle'>{ story.title }</span>
-					{ (story.url && !hideStoryItems.domain) && <> <small className='sUrl'>({ urlDomain(story.url) })</small></> }
+					{ (story.url && !hideStoryItems.domain) && <small className='sUrl'>({ urlDomain(story.url) })</small> }
 				</a>
 			:	<Link href={`#${storyId}`}>
 					<a className='sLink'>{ story.title }</a>

@@ -40,8 +40,10 @@ export default function Header() {
 			<Symbol id='settings' /><span>Settings</span>
 		</button>
 
-		{ showSettings && 
-			<Settings handleClose={() => setShowSettings(false)} /> }
+		<div id='settingsHolder'>
+			{ showSettings && 
+				<Settings handleClose={() => setShowSettings(false)} /> }
+		</div>
 
 	</header>
 }

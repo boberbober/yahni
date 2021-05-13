@@ -3,20 +3,13 @@ import React from 'react'
 import { useRecoilState } from 'recoil'
 import produce from 'immer'
 
-import { settingsAtom, lastMaxItemSelector } from '../utils/atoms'
+import { settingsAtom } from '../utils/atoms'
 
 
-const THEMES = {
-	default: { 
-		name: 'Default',
-	},
-	hn: {
-		name: 'HackerNews',
-	},
-	solarized: {
-		name: 'Solarized',
-	}
-}
+const THEMES = [
+	['hn', 'HackerNews'],
+	['solarized', 'Solarized']
+]
 
 const DARKMODE = [
 	['auto', 'auto'],
@@ -24,20 +17,18 @@ const DARKMODE = [
 	['off', 'off'],
 ]
 
-
 const STORYITEMS = [
 	['score', 'score'],
-	['comments', 'comments'],
+	['comments', 'comment count'],
+	['domain', 'url domain'],
 	['date', 'date'],
-	['user', 'user'],
-	['domain', 'domain'],
+	['user', 'author'],
 ]
 
 
 export default function Settings({ handleClose }) {
 
 	const [settings, setSettings] = useRecoilState(settingsAtom)
-	const [lastMaxItem, setLastMaxItem] = useRecoilState(lastMaxItemSelector)
 	const ref = React.useRef(null)
 
 	const handleChange = ({ target }) => {
@@ -63,72 +54,83 @@ export default function Settings({ handleClose }) {
 
 	return <div id='Settings' ref={ref}>
 		
-		<label>
-			<input type='checkbox'
-				name='liveUpdates'
-				checked={settings.liveUpdates}
-				onChange={handleChange}
-			/> enable live updates
-		</label>
-
-		<label>
-			<input type='checkbox'
-				name='linkNewTab'
-				checked={settings.linkNewTab}
-				onChange={handleChange}
-			/> open links in new tab
-		</label>
-
-		<label>
-			<input type='checkbox'
-				name='infiniteScroll'
-				checked={settings.infiniteScroll}
-				onChange={handleChange}
-			/> enable infinite scroll
-		</label>
-
-		<h4>Theme</h4>
-
-		{ Object.entries(THEMES).map(([id, { name }]) =>
-			<label key={id}>
-				<input type='radio'
-					name='theme'
-					value={id}
-					checked={settings.theme === id}
-					onChange={handleChange}
-				/> { name }
-			</label>
-		)}
-
-		<h4>Dark mode</h4>
-		{ DARKMODE.map(([id, label]) =>
-			<label key={id}>
-				<input type='radio'
-					name='darkMode'
-					value={id}
-					checked={settings.darkMode === id}
-					onChange={handleChange}
-				/> { label }
-			</label>
-		)}
-
-		<h4>Show story list items</h4>
-		{ STORYITEMS.map(([id, label]) =>
-			<label key={id}>
+		<div className='setField'>
+			<label>
 				<input type='checkbox'
-					name={`storyItems-${id}`}
-					value={id}
-					checked={!settings.hideStoryItems[id]}
-					onChange={handleHideStoryItems}
-				/> { label }
+					name='liveUpdates'
+					checked={settings.liveUpdates}
+					onChange={handleChange}
+				/> Enable live updates
 			</label>
-		)}
-		<input type='number'
-			defaultValue={lastMaxItem}
-			onBlur={event => {
-				localStorage.setItem('lastMaxItem', parseInt(event.target.value))
-			}}
-		/>
+			<p className='setDesc'>
+				New stories, comments, and scores will appear without refreshing the page
+			</p>
+		</div>
+
+		<div className='setField'>
+			<label>
+				<input type='checkbox'
+					name='linkNewTab'
+					checked={settings.linkNewTab}
+					onChange={handleChange}
+				/> Open links in new tab
+			</label>
+		</div>
+		
+		<div className='setField'>
+			<label>
+				<input type='checkbox'
+					name='infiniteScroll'
+					checked={settings.infiniteScroll}
+					onChange={handleChange}
+				/> Enable infinite scroll
+			</label>
+		</div>
+
+		<div className='setField'>
+			<h4>Dark mode:</h4>
+			<div id='setDarkMode'>
+				{ DARKMODE.map(([id, label]) =>
+					<label key={id}>
+						<input type='radio'
+							name='darkMode'
+							value={id}
+							checked={settings.darkMode === id}
+							onChange={handleChange}
+						/> { label }
+					</label>
+				)}
+			</div>
+		</div>
+
+		<div className='setField'>
+			<h4>Color theme:</h4>
+			{ THEMES.map(([id, name]) =>
+				<label key={id}>
+					<input type='radio'
+						name='theme'
+						value={id}
+						checked={settings.theme === id}
+						onChange={handleChange}
+					/> { name }
+				</label>
+			)}
+			<p className='setDesc'>Each theme has dark and light version</p>
+		</div>
+
+		<div className='setField'>
+			<h4>Show in stories list:</h4>
+			{ STORYITEMS.map(([id, label]) =>
+				<label key={id}>
+					<input type='checkbox'
+						name={`storyItems-${id}`}
+						value={id}
+						checked={!settings.hideStoryItems[id]}
+						onChange={handleHideStoryItems}
+					/> { label }
+				</label>
+			)}
+		</div>
 
 	</div>
 }

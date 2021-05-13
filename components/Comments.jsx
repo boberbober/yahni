@@ -11,9 +11,7 @@ import Comment from './Comment'
 export default function Comments({ story }) {
 
 	if (!story.kids)
-		return <p>
-			<a href={`https://news.ycombinator.com/item?id=${story.id}`}>reply</a>
-		</p>
+		return null
 	
 	return <div id='StoryComments'>
 

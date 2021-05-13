@@ -1,12 +1,33 @@
 
+#settingsHolder
+	align-self: flex-end
+
 #Settings
-	z-index: 10
-	background: var(--bgrColor)
+	z-index: 100
+	background: var(--bgrAltColor)
 	position: absolute
-	right: 1rem
-	top: 2rem
+	transform: translate(-100%, .5em)
 	width: 300px
-	border: 1px solid gray
-	padding: 1em
+	border: 1px solid var(--buttonColor)
+	h4
+		margin-bottom: .2em
 	label
-		display: block
+		display: flex
+		align-items: center
+		padding: .25em 0
+		input
+			margin-right: .5em
+
+.setField
+	padding: .5em
+	border-bottom: 1px solid var(--buttonColor)
+	&:last-child
+		border-bottom: none
+
+.setDesc
+	font-size: small
+
+#setDarkMode
+	display: flex
+	> label
+		margin-right: 1em

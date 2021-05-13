@@ -2,7 +2,6 @@
 import React from 'react'
 import { useSetRecoilState, useRecoilState } from 'recoil'
 
-import { db } from '../utils/firebase'
 import Comments from './Comments'
 import Time from './Time'
 import UserText from './UserText'
@@ -21,21 +20,7 @@ export default function StoryPage() {
 	const [storyId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const setOpenedStory = useSetRecoilState(openedStorySelector(storyId))
 	const [story, setStory] = useRecoilState(storyAtom(storyId))
-
-	// const refresh = useRecoilCallback(({ set }) => async (id) => {
-	// 	console.log('refetch story', storyId, id)
-	// 	const snap = await db.child(`item/${storyId}`).get()
-	// 	const val = snap.val()
-	// 	console.log(val)
-	// 	set(storyItemSelector(storyId), val || null)
-	// })
-
-	// React.useEffect(() => {
-	// 	const intervalId = setInterval(refresh, 2000)
-	// 	return () => clearInterval(intervalId)
-	// }, [refresh])
-
-	// const story = loadable.state === 'hasValue' ? loadable.contents : null
+	const ref = React.useRef(null)
 
 	React.useEffect(() => {
 		if (story === null)
@@ -49,32 +34,24 @@ export default function StoryPage() {
 			setOpenedStory(story.descendants || 0)
 		}
 	}, [setOpenedStory, story])
+
+	React.useEffect(() => {
+		ref.current.scrollTop = 0
+	}, [storyId])
 	
-	// if (loadable.state === 'hasError') {
-	// 	console.warn('story hasError', storyId)
-	// 	return <li>error</li>
-	// }
-
-	// if (loadable.state === 'loading')
-	// 	return <div id='StoryPage'>Loading...</div>
-
 	if (!story) { 
 		return <div id='StoryPage'>
 			<p>Loading...</p>
 		</div>
 	}
 	
-	return <div id='StoryPage'>
+	return <div id='StoryPage' ref={ref}>
 
 		<button id='storyCloseButton'
 			onClick={() => setOpenStoryId(null)}
 		>
 			close
 		</button>
-
-		{/* <p>story opened: {JSON.stringify(openedStory)}</p> */}
-
-		{/* <button onClick={() => refresh()}>refresh</button> */}
 
 		<h1>{ story.title }</h1>
 
