@@ -35,7 +35,9 @@ export default function Comment({ commentId }) {
 	// }
 
 	if (!comment)
-		return <div className='comment cLoading'><em>Loading...</em></div>
+		return <div className='comment cLoading'>
+			<em className='loading'>Loading...</em>
+		</div>
 
 	if (comment.deleted)
 		return <div className='comment cDeleted'>

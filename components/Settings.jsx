@@ -34,11 +34,11 @@ const STORYITEMS = [
 ]
 
 
-export default function Settings() {
+export default function Settings({ handleClose }) {
 
-	const [showSettings, setShowSettings] = React.useState(true)
 	const [settings, setSettings] = useRecoilState(settingsAtom)
 	const [lastMaxItem, setLastMaxItem] = useRecoilState(lastMaxItemSelector)
+	const ref = React.useRef(null)
 
 	const handleChange = ({ target }) => {
 		setSettings(produce(settings, draft => {
@@ -52,10 +52,16 @@ export default function Settings() {
 		}))
 	}
 
-	if (!showSettings)
-		return null
+	React.useEffect(() => {
+		function handleClick(event) {
+			if (!ref.current?.contains(event.target))
+				handleClose()
+		}
+		window.addEventListener('click', handleClick)
+		return () => window.removeEventListener('click', handleClick)
+	}, [handleClose])
 
-	return <div id='Settings'>
+	return <div id='Settings' ref={ref}>
 		
 		<label>
 			<input type='checkbox'
@@ -117,8 +123,6 @@ export default function Settings() {
 				/> { label }
 			</label>
 		)}
-
-
 		<input type='number'
 			defaultValue={lastMaxItem}
 			onBlur={event => {

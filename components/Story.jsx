@@ -47,9 +47,13 @@ export default function Story({ storyId }) {
 				<span className='sScore'>_</span> }
 			{ !hideStoryItems.comments &&
 				<button className='sComments'>_</button> }
-			<span className='sLink'>...</span>
+			<span className='sLink'>
+				<em className='loading'>...</em>
+			</span>
 			{ (!hideStoryItems.date || !hideStoryItems.user) &&
-				<p className='sSub'>...</p> }
+				<p className='sSub'>
+					<em className='loading'>...</em>
+				</p> }
 		</li>
 	}
 	
