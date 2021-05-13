@@ -1,7 +1,7 @@
 {
-  "name": "hackernews",
+  "name": "yahni",
   "version": "1.0.0",
-  "description": "Hacker News client",
+  "description": "Hacker News Interface",
   "main": "index.js",
   "author": "Gregory Bober <g.bober@gmail.com>",
   "license": "MIT",

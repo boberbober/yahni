@@ -103,7 +103,7 @@ export default function Settings({ handleClose }) {
 			</div>
 		</div>
 
-		<div className='setField'>
+		{/* <div className='setField'>
 			<h4>Color theme:</h4>
 			{ THEMES.map(([id, name]) =>
 				<label key={id}>
@@ -116,7 +116,7 @@ export default function Settings({ handleClose }) {
 				</label>
 			)}
 			<p className='setDesc'>Each theme has dark and light version</p>
-		</div>
+		</div> */}
 
 		<div className='setField'>
 			<h4>Show in stories list:</h4>
