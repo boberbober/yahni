@@ -1,9 +1,9 @@
 
-export default [
-	['Top', '', 'top'],
-	['Best', 'best', 'best'],
-	['New', 'new', 'new'],
-	['Ask', 'ask', 'ask'],
-	['Show', 'show', 'show'],
-	['Jobs', 'jobs', 'job'],
-]
+export default {
+	top:	{	label: "Top",	url: '',			title: "Top Stories"},
+	best:	{	label: "Best",	url: 'best',	title: "Best Stories"},
+	new:	{	label: "New",	url: 'new',		title: "Newest Stories"},
+	ask:	{	label: "Ask",	url: 'ask',		title: "Ask HN"},
+	show:	{	label: "Show",	url: 'show',	title: "Show HN"},
+	job:	{	label: "Jobs",	url: 'jobs',	title: "Jobs"},
+}

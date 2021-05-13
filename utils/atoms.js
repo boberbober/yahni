@@ -1,7 +1,6 @@
 
 import { atom, selector, selectorFamily, atomFamily, DefaultValue } from 'recoil'
 
-// import { db } from '../utils/firebase'
 import DEFAULTSETTINGS from '../utils/defaultSettings'
 import produce from 'immer'
 
@@ -211,7 +210,6 @@ export const visitedLinksAtom = atom({
 
 const storeSettingsEffect = ({ onSet }) => {
 	onSet(settings => {
-		console.log('onSet', settings)
 		try {
 			if (hasStorage())
 				localStorage.setItem('settings', JSON.stringify(settings))
@@ -222,7 +220,6 @@ const storeSettingsEffect = ({ onSet }) => {
 export const settingsAtom = atom({
 	key: 'settings',
 	default: new Promise(resolve => {
-		console.log('default storage settings')
 		let settings = { ...DEFAULTSETTINGS }
 		try {
 			if (hasStorage()) {

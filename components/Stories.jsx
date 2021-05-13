@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import Story from '../components/Story'
 import StoryPage from '../components/StoryPage'
 import { db } from '../utils/firebase'
+import PAGES from '../utils/pages'
 
 import { 
 	storiesAtom, 
@@ -23,6 +24,7 @@ const STORIESPERPAGE = 50
 
 export default function Stories({ type }) {
 
+	const { title } = PAGES[type]
 	const dbConnected = useRecoilValue(dbConnectedAtom)
 	const [stories, setStories] = useRecoilState(storiesAtom(type))
 	const [start] = React.useState(0)
@@ -64,7 +66,6 @@ export default function Stories({ type }) {
 
 		const handleUpdate = snap => {
 			const stories = snap.val()
-			console.log('stories update:', type, initLoaded.current)
 			if (!initLoaded.current || type !== 'new') {
 				initLoaded.current = true
 				setStories(stories)
@@ -93,16 +94,16 @@ export default function Stories({ type }) {
 	>
 
 		<Helmet>
-			<title>{type}</title>
+			<title>{title}</title>
 		</Helmet>
 
 		<div id='Stories' ref={scrollRef}>
 
 			{ (dbConnected && !storiesLen) &&
-				<p>Loading stories...</p> }
+				<p><span className='loading'>Loading stories...</span></p> }
 
 			{ (!dbConnected && !storiesLen) &&
-				<p>Connecting...</p> }
+				<p><span className='loading'>Connecting...</span></p> }
 
 			{ (!!storiesLen && ['top', 'best', 'ask', 'show'].includes(type)) && 
 				<label className='orderLatest'>

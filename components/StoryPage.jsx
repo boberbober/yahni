@@ -5,13 +5,13 @@ import { useSetRecoilState, useRecoilState } from 'recoil'
 import Comments from './Comments'
 import Time from './Time'
 import UserText from './UserText'
+import fetchItem from '../utils/fetchItem'
 
 import { 
 	openedStorySelector, 
 	openStoryIdAtom, 
 	storyAtom, 
 } from '../utils/atoms'
-import fetchItem from '../utils/fetchItem'
 
 
 
@@ -27,16 +27,14 @@ export default function StoryPage() {
 			fetchItem(storyId, setStory)
 	}, [story])
 
-
 	React.useEffect(() => {
-		if (story) {
-			console.log('save opened story status')
+		if (story)
 			setOpenedStory(story.descendants || 0)
-		}
 	}, [setOpenedStory, story])
 
 	React.useEffect(() => {
-		ref.current.scrollTop = 0
+		if (ref.current)
+			ref.current.scrollTop = 0
 	}, [storyId])
 	
 	if (!story) { 

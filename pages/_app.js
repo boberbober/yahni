@@ -4,7 +4,6 @@ import { RecoilRoot } from 'recoil'
 import { Helmet } from 'react-helmet'
 
 import { FirebaseProvider } from '../utils/firebase'
-import UserData from '../utils/UserData'
 import Updates from '../utils/Updates'
 import Sprite from '../utils/Sprite'
 import Header from '../components/Header'
@@ -17,15 +16,18 @@ export default function AppWrap({ Component, pageProps }) {
 
 	return <RecoilRoot>
 
-		<Helmet defer={false}>
+		<Helmet 
+			defer={false}
+			defaultTitle="Yet Another Hacker News Interface"
+			titleTemplate="%s - Yet Another Hacker News Interface"
+		>
 			<meta name='color-scheme' content='light dark' />
-			<title>YAHNI</title>
+			<meta name="description" content="An unofficial alternative Hacker News interface with live updates, comments, and dark mode. Movile friendly." />
 		</Helmet>
 
 		<FirebaseProvider />
 		<SettingsProvider />
 		<Updates />
-		<UserData />
 
 		<Header />
 		<Component {...pageProps} />

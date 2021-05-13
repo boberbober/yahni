@@ -16,12 +16,14 @@ export default function Header() {
 	return <header>
 		
 		<Link href='/'>
-			<a id='logo'>YA<strong>HN</strong>I</a>
+			<a id='logo' title='Yet Another Hacker News Interface'>
+				YA<strong>HN</strong>I
+			</a>
 		</Link>
 
 		<nav>
-			{ PAGES.map(([label, url]) =>
-				<NavLink href={`/${url}`} key={label}>
+			{ Object.entries(PAGES).map(([id, { label, url }]) =>
+				<NavLink href={`/${url}`} key={id}>
 					<a>{label}</a>
 				</NavLink>
 			)} 

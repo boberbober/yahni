@@ -19,25 +19,29 @@ export default function Updates() {
 	const dbConnected = useRecoilValue(dbConnectedAtom)
 	const { liveUpdates } = useRecoilValue(settingsAtom)
 
-	const updateStories = useRecoilCallback(({ snapshot, set }) => async updatedItems => {
-		Promise.all(PAGES.map(page => snapshot.getPromise(storiesAtom(page[2]))))
+	const handleUpdate = useRecoilCallback(({ snapshot, set }) => async snap => {
+		const update = snap.val()
+		if (!update?.items?.length)
+			return
+		Promise.all(Object.entries(PAGES).map(([type]) => snapshot.getPromise(storiesAtom(type))))
 			.then(pageStories => pageStories.flat())
 			.then(allStories => {
-				updatedItems.forEach(itemId => {
-					if (allStories.includes(itemId)) {
-						fetchItem(itemId, data => set(storyAtom(itemId), data))
-					} else {
-						fetchItem(itemId, data => set(commentAtom(itemId), data))
-					}
+				update.items.forEach(itemId => {
+					fetchItem(itemId, data => 
+						set(allStories.includes(itemId) 
+							? storyAtom(itemId)
+							: commentAtom(itemId)
+						, data)
+					)
 				})
 			})
 	})
 
-	const handleUpdate = React.useCallback(snap => {
-		const updates = snap.val()
-		if (!!updates?.items?.length)
-			updateStories(updates.items)
-	}, [dbConnected])
+	// const handleUpdate = React.useCallback(snap => {
+	// 	const updates = snap.val()
+	// 	if (!!updates?.items?.length)
+	// 		updateStories(updates.items)
+	// }, [dbConnected])
 
 	React.useEffect(() => {
 		if (!dbConnected || !db || !liveUpdates) 

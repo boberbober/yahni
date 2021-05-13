@@ -5,20 +5,17 @@
 @use 'story'
 @use 'settings'
 @use 'header'
+@use 'about'
 
 :root
 	color-scheme: light dark
-
 
 body
 	display: flex
 	align-items: stretch
 	justify-content: center
 	transition: background-color 100ms ease, color 100ms ease
-	// height: 100vh
-	// font-family: "Noto Sans", "Open Sans", "Lato", Roboto, Tahoma, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"
 	font-family: system-ui, -apple-system, sans-serif
-	// font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif
 	line-height: 1.2
 	background-color: var(--bgrColor)
 	color: var(--textColor)
@@ -67,7 +64,6 @@ button
 	flex-direction: column
 	height: 100vh
 	max-width: 90em
-	// background: gold
 
 
 #svgSprite
@@ -76,13 +72,13 @@ button
 	height: 0
 
 
-#AboutPage
-	padding: 1rem
-	max-width: 30em
-	margin: 0 auto
-	h1
-		margin: .5em 0
-	p
-		margin: 1em 0
+// loading...
 
+.loading
+	font-family: monospace
+	clip-path: inset(0 3ch 0 0)
+	animation: loadingFrames 500ms steps(4) infinite
 
+@keyframes loadingFrames
+	to
+		clip-path: inset(0 -1ch 0 0)
