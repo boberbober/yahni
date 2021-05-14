@@ -23,6 +23,7 @@ export default function AppWrap({ Component, pageProps }) {
 		>
 			<meta name='color-scheme' content='light dark' />
 			<meta name="description" content="An unofficial alternative Hacker News interface with live updates, comments, and dark mode. Movile friendly." />
+			<link rel="icon" href="/favicon.svg" />
 		</Helmet>
 
 		<FirebaseProvider />

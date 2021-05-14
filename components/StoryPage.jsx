@@ -39,7 +39,7 @@ export default function StoryPage() {
 	
 	if (!story) { 
 		return <div id='StoryPage'>
-			<p>Loading...</p>
+			<span className='loading'>Loading...</span>
 		</div>
 	}
 	

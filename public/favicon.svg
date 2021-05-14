@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<style>
+	path { fill: #333; }
+	@media (prefers-color-scheme: dark) {
+		path { fill: #eee; }
+	}
+</style>
+<title>YAHNI</title>
+<path d="M72.5,235.6V201.2H55.1v34.4h-32V141.3h32v34.3H72.5V141.3h32.1v94.3Z"/>
+<path d="M164.8,235.6l-21.7-44h-.9v44H111.7V141.3h32.7l18.4,36.5h.9V141.3h30.6v94.3Z" />
+<path d="M201.4,235.6V141.3h32.1v94.3Z"/>
+<path d="M58,134.5V98L22.3,21.3H61.5L77.1,63.4h1.1L93.9,21.3h38.3L96.5,98v36.5Z" />
+<path d="M185.2,134.5l-4.1-17H148.3l-3.9,17H107L138.5,21.3H192l31.4,113.2ZM165.3,52.2h-1.5l-9.2,39h20.1Z" />
+</svg>

@@ -23,6 +23,6 @@ export default function AboutPage() {
 				<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height='40px' />
 			</a>
 		</p>
-		
+
 	</main>
 }
