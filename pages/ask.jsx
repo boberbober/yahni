@@ -1,9 +1,9 @@
 
 import React from 'react'
 
-import Stories from '../components/Stories'
+import List from '../components/List'
 
 
 export default function AskStories() {
-	return <Stories type='ask' />
+	return <List type='ask' />
 }

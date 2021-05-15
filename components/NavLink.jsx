@@ -10,7 +10,6 @@ export default function NavLink({ href, children }) {
 
 	let className = `navLink ${children.props.className || ''}`
 
-	// if (router.pathname.startsWith(href))
 	if (router.pathname === href)
 		className = `${className} selected`
 

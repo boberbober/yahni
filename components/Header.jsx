@@ -23,7 +23,7 @@ export default function Header() {
 
 		<nav>
 			{ Object.entries(PAGES).map(([id, { label, url }]) =>
-				<NavLink href={`/${url}`} key={id}>
+				<NavLink key={id} href={`/${url}`}>
 					<a>{label}</a>
 				</NavLink>
 			)} 

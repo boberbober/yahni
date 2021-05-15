@@ -20,13 +20,17 @@ export default function Updates() {
 	const { liveUpdates } = useRecoilValue(settingsAtom)
 
 	const handleUpdate = useRecoilCallback(({ snapshot, set }) => async snap => {
+		
 		const update = snap.val()
 		if (!update?.items?.length)
 			return
+		
 		Promise.all(Object.entries(PAGES).map(([type]) => snapshot.getPromise(storiesAtom(type))))
 			.then(pageStories => pageStories.flat())
 			.then(allStories => {
 				update.items.forEach(itemId => {
+					// TODO: make this more efficient
+					// If an item is not in stories then it's (probably) a comment but updates can also be user items
 					fetchItem(itemId, data => 
 						set(allStories.includes(itemId) 
 							? storyAtom(itemId)
@@ -37,14 +41,8 @@ export default function Updates() {
 			})
 	})
 
-	// const handleUpdate = React.useCallback(snap => {
-	// 	const updates = snap.val()
-	// 	if (!!updates?.items?.length)
-	// 		updateStories(updates.items)
-	// }, [dbConnected])
-
 	React.useEffect(() => {
-		if (!dbConnected || !db || !liveUpdates) 
+		if (!dbConnected || !db || !liveUpdates)
 			return
 		db.child(`/updates`).on('value', handleUpdate)
 		return () => db.child(`/updates`).off()

@@ -1,9 +1,9 @@
 
 import React from 'react'
 
-import Stories from '../components/Stories'
+import List from '../components/List'
 
 
-export default function JobsStories() {
-	return <Stories type='job' />
+export default function JobStories() {
+	return <List type='job' />
 }

@@ -1,122 +1,95 @@
 
 import React from 'react'
-import cn from 'classnames'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import Link from 'next/link'
+import { useSetRecoilState, useRecoilState } from 'recoil'
 
+import Comment from './Comment'
 import Time from './Time'
-
-import { 
-	lastMaxItemSelector, 
-	openStoryIdAtom, 
-	settingsAtom,
-	openedStorySelector,
-	storyAtom,
-} from '../utils/atoms'
+import UserText from './UserText'
 import fetchItem from '../utils/fetchItem'
 
+import { 
+	openedStorySelector, 
+	openStoryIdAtom, 
+	storyAtom, 
+} from '../utils/atoms'
 
-const urlDomain = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 
 
-export default function Story({ storyId }) {
+export default function Story() {
 
-	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
+	const [storyId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
+	const setOpenedStory = useSetRecoilState(openedStorySelector(storyId))
 	const [story, setStory] = useRecoilState(storyAtom(storyId))
-	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
-	const { linkNewTab, hideStoryItems } = useRecoilValue(settingsAtom)
-	const openedStory = useRecoilValue(openedStorySelector(storyId))
-	
+	const ref = React.useRef(null)
+
 	React.useEffect(() => {
 		if (story === null)
 			fetchItem(storyId, setStory)
 	}, [story])
 
-	if (!story) {
-		return <li className='story sLoading'>
-			{ !hideStoryItems.score &&
-				<span className='sScore'>_</span> }
-			{ !hideStoryItems.comments &&
-				<button className='sComments'>_</button> }
-			<span className='sLink'>
-				<em className='loading'>...</em>
-			</span>
-			{ (!hideStoryItems.date || !hideStoryItems.user) &&
-				<p className='sSub'>
-					<em className='loading'>...</em>
-				</p> }
-		</li>
+	React.useEffect(() => {
+		if (story)
+			setOpenedStory(story.descendants || 0)
+	}, [setOpenedStory, story])
+
+	React.useEffect(() => {
+		if (ref.current)
+			ref.current.scrollTop = 0
+	}, [storyId])
+	
+	if (!story) { 
+		return <div id='Story'>
+			<span className='loading'>Loading...</span>
+		</div>
 	}
 	
-	return <li 
-		className={cn(`story s-${story.type}`, {
-			sNew: lastMaxItem < storyId,
-			sOpen: openStoryId === storyId,
-			noScore: hideStoryItems.score,
-			noComments: hideStoryItems.comments,
-		})}
-	>
+	return <div id='Story' ref={ref}>
 
-		{ story.type !== 'job' && <>
-			
-			{ !hideStoryItems.score &&
-				<a className='sScore'
-					target={linkNewTab ? '_blank' : '_self'}
-					href={`https://news.ycombinator.com/item?id=${storyId}`}
-				>
-					{ story.score }
-				</a>
-			}
+		<button id='storyCloseButton'
+			onClick={() => setOpenStoryId(null)}
+		>
+			close
+		</button>
 
-			{ !hideStoryItems.comments &&
-				<Link href={`#${storyId}`}>
-					<a 
-						className={cn('sComments', { 
-							scOpened: !!openedStory,
-							scHasNew: openedStory?.desc < story.descendants,
-						})}
-						onClick={() => setOpenStoryId(storyId)}
-					>
-						{ story.descendants }
-					</a>
-				</Link>
-			}
+		<h1>{ story.title }</h1>
 
-		</>}
-
-
-		{ story.url
-			?	<a 
-					className='sLink'
-					target={linkNewTab ? '_blank' : '_self'}
-					rel='noopener'
-					href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
-				>
-					<span className='sTitle'>{ story.title }</span>
-					{ (story.url && !hideStoryItems.domain) && <small className='sUrl'>({ urlDomain(story.url) })</small> }
-				</a>
-			:	<Link href={`#${storyId}`}>
-					<a className='sLink'>{ story.title }</a>
-				</Link>
+		{ story.url &&
+			<a className='storyLink'
+				href={story.url} 
+				rel='noopener'
+			>
+				{story.url}
+			</a>
 		}
 
+		<p className='storyInfo'>
+			{`${story.score} ${story.score > 1 ? "points" : "point"}`}
+			{" | "}
+			<Time time={story.time} />
+			{" by "}
+			<a className='storyBy' 
+				href={`https://news.ycombinator.com/user?id=${story.by}`}
+			>{ story.by }</a>
+			{" | "}
+			<a href={`https://news.ycombinator.com/item?id=${storyId}`}
+				rel='noopener'
+			>read on HN</a>
+		</p>
 
-		{ (!hideStoryItems.date || !hideStoryItems.user) &&
-			<p className='sSub'>
+		{ story.text &&
+			<UserText className='storyText' text={story.text} /> }
 
-				{ !hideStoryItems.date && <>
-					<Time time={story.time} />
-					{' '}
-				</>}
+		{ story.type !== 'job' && <h4>
+			{ !story.descendants ? "no comments"
+				: story.descendants > 1 
+				? `${story.descendants} comments` 
+				: "one comment" 
+			}
+		</h4> }
 
-				{ !hideStoryItems.user && <>
-					<span className='sBy'>
-						by <em>{ story.by }</em>
-					</span>
-				</>}
+		{ story.kids?.length &&	<div id='StoryComments'>
+			{ story.kids.map(id => <Comment key={id} commentId={id} /> )}
+		</div>}
 
-			</p>
-		}
-
-	</li>
+	</div>
 }

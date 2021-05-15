@@ -6,6 +6,7 @@ import UserText from './UserText'
 import Time from './Time'
 import Symbol from './Symbol'
 import fetchItem from '../utils/fetchItem'
+
 import { commentAtom } from '../utils/atoms'
 
 
@@ -19,25 +20,30 @@ export default function Comment({ commentId }) {
 			fetchItem(commentId, setComment)
 	}, [comment])
 
-	if (!comment)
+	if (!comment) {
 		return <div className='comment cLoading'>
 			<em className='loading'>Loading...</em>
 		</div>
+	}
 
-	if (comment.deleted)
+	if (comment.deleted) {
 		return <div className='comment cDeleted'>
 			<em>[deleted]</em>
 		</div>
+	}
 
 	return <div className='comment'>
 
 		<p className='cHead'>
+			
 			<a className='cBy' href={`https://news.ycombinator.com/user?id=${comment.by}`}>
 				{comment.by}
 			</a>
+
 			<a className='cUrl' href={`https://news.ycombinator.com/item?id=${commentId}`}>
 				<Time time={comment.time} />
 			</a>
+
 			{ comment.kids &&
 				<button className='cCollapse' 
 					onClick={() => setShowKids(prev => !prev)}
@@ -45,13 +51,13 @@ export default function Comment({ commentId }) {
 					<Symbol id={ showKids ? 'up' : 'down' } />
 				</button>
 			}
+
 		</p>
 
 		<UserText text={comment.text} />
 		
-		{ (showKids && !!comment.kids) && 
-			comment.kids.map(id => <Comment key={id} commentId={id} /> )
-		}
+		{ (showKids && comment.kids) && 
+			comment.kids.map(id => <Comment key={id} commentId={id} /> ) }
 
 	</div>
 }

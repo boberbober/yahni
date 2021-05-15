@@ -6,8 +6,8 @@ import { useSetRecoilState } from 'recoil'
 
 import { dbConnectedAtom } from './atoms'
 
-let db
 
+let db
 
 function FirebaseProvider() {
 

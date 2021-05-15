@@ -1,5 +1,5 @@
 
-#MainStories
+#StoriesPage
 	flex: 1
 	display: grid
 	min-height: 0
@@ -26,7 +26,7 @@
 	--numColWidth: 2.5em
 	--colGap: 1em
 
-.orderLatest
+.newestFirst
 	margin-bottom: 1em
 	align-self: flex-start
 	display: flex
@@ -35,16 +35,13 @@
 	input
 		margin-right: .5em
 
+
+// List
+
 #StoriesList
 	margin-bottom: 1rem
 
-// @keyframes updated
-// 	0%
-// 		transform: translateY(-10px)
-// 	100%
-// 		transform: translateY(0px)
-
-.story
+.snippet
 	--commentsBgr: var(--bgrAltColor)
 	--commentsText: var(--textColor)
 	padding: .5em 0
@@ -73,11 +70,6 @@
 		color: var(--newColor) !important
 		&:visited
 			color: var(--visitedColor) !important
-
-
-// .sOpen
-// 	.sLink
-// 		color: var(--activeColor)
 
 .sScore
 	grid-row: 1 / span 2
@@ -133,8 +125,6 @@
 
 .sTitle
 	margin-right: .25em
-// .sUrl
-	// margin-left: 1em
 
 .sSub
 	grid-row: 2 / span 1
@@ -142,6 +132,8 @@
 	font-size: small
 
 
+// Pagination
+	
 #moreStoriesButton
 	padding: 1em
 	margin-right: 1rem

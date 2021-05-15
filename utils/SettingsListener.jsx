@@ -19,9 +19,11 @@ export default function SettingsProvider() {
 				:	settings.darkMode === 'on' ? 'dark' : 'light'
 			document.body.dataset.theme = `${settings.theme}-${colorScheme}`
 		}
+		
 		setBodyTheme()
 		
 		mql.addEventListener('change', setBodyTheme)
+
 		return () => mql.removeEventListener('change', setBodyTheme)
 
 	}, [settings.theme, settings.darkMode])

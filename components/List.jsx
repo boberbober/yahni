@@ -5,16 +5,16 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { Helmet } from 'react-helmet'
 import { useRouter } from 'next/router'
 
-import Story from '../components/Story'
-import StoryPage from '../components/StoryPage'
+import Snippet from './Snippet'
+import Story from './Story'
 import { db } from '../utils/firebase'
 import PAGES from '../utils/pages'
 
 import { 
 	storiesAtom, 
 	dbConnectedAtom, 
-	orderAtom, 
-	orderedStoriesSelector, 
+	newestFirstAtom, 
+	storiesSelector, 
 	openStoryIdAtom,
 	settingsAtom,
 } from '../utils/atoms'
@@ -27,11 +27,10 @@ export default function Stories({ type }) {
 	const { title } = PAGES[type]
 	const dbConnected = useRecoilValue(dbConnectedAtom)
 	const [stories, setStories] = useRecoilState(storiesAtom(type))
-	const [start] = React.useState(0)
-	const [end, setEnd] = React.useState(STORIESPERPAGE)
-	const [latestOrder, setLatestOrder] = useRecoilState(orderAtom(type))
-	const orderedStories = useRecoilValue(orderedStoriesSelector({ type, start, end }))
 	const storiesLen = stories.length
+	const [end, setEnd] = React.useState(STORIESPERPAGE)
+	const [newestFirst, setNewestFirst] = useRecoilState(newestFirstAtom(type))
+	const selectedStories = useRecoilValue(storiesSelector({ type, start: 0, end }))
 	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
 	const { liveUpdates, infiniteScroll } = useRecoilValue(settingsAtom)
 	const initLoaded = React.useRef(false)
@@ -47,11 +46,10 @@ export default function Stories({ type }) {
 		setEnd(nextEnd)
 	}
 	
-	const handleOrder = event => {
-		setLatestOrder(event.target.checked)
-	}
-
 	React.useEffect(() => {
+
+		if (!dbConnected || !db || !liveUpdates) 
+			return
 
 		async function setLastMaxItem() {
 			try {
@@ -60,11 +58,9 @@ export default function Stories({ type }) {
 			} catch (error) { console.error(error) }
 		}
 		setLastMaxItem()
-		
-		if (!dbConnected || !db || !liveUpdates) 
-			return
 
 		const handleUpdate = snap => {
+			// story ids from /new API endpoint appear on the list before the item details are available so we wait a little to fetch them 
 			const stories = snap.val()
 			if (!initLoaded.current || type !== 'new') {
 				initLoaded.current = true
@@ -74,6 +70,7 @@ export default function Stories({ type }) {
 			}
 		}
 		db.child(`/${type}stories`).on('value', handleUpdate)
+
 		return () => db.child(`/${type}stories`).off()
 
 	}, [dbConnected, liveUpdates])
@@ -81,15 +78,14 @@ export default function Stories({ type }) {
 	React.useEffect(() => {
 		const anchorMatch = asPath.match(/#(\d{8})$/)
 		const anchorId = parseInt(anchorMatch?.[1])
-		if (!!anchorId) {
+		if (anchorId) {
 			setOpenStoryId(anchorId)
 		} else if (openStoryId) {
 			setOpenStoryId(null)
 		}
 	}, [asPath])
 
-	return <main 
-		id='MainStories' 
+	return <main id='StoriesPage' 
 		className={!!openStoryId ? 'storyOpened' : 'storyClosed'}
 	>
 
@@ -99,28 +95,28 @@ export default function Stories({ type }) {
 
 		<div id='Stories' ref={scrollRef}>
 
+			{ (!dbConnected && !storiesLen) &&
+				<p><span className='loading'>Connecting...</span></p> }
+			
 			{ (dbConnected && !storiesLen) &&
 				<p><span className='loading'>Loading stories...</span></p> }
 
-			{ (!dbConnected && !storiesLen) &&
-				<p><span className='loading'>Connecting...</span></p> }
-
 			{ (!!storiesLen && ['top', 'best', 'ask', 'show'].includes(type)) && 
-				<label className='orderLatest'>
+				<label className='newestFirst'>
 					<input type='checkbox'
-						onChange={handleOrder}
-						checked={latestOrder}
+						onChange={event => setNewestFirst(event.target.checked)}
+						checked={newestFirst}
 					/> newest first
 				</label>
 			}
 
 			<ul id='StoriesList'>
-				{ orderedStories.map(id => <Story key={id} storyId={id} /> )}
+				{ selectedStories.map(id => <Snippet key={id} storyId={id} /> )}
 			</ul>
 
 			{ (!infiniteScroll && storiesLen > 0 && end < storiesLen) &&
 				<button id='moreStoriesButton'
-					onClick={() => nextPage()}
+					onClick={nextPage}
 				>
 					Load more
 				</button> 
@@ -131,7 +127,7 @@ export default function Stories({ type }) {
 
 		</div>
 
-		{ !!openStoryId && <StoryPage /> }
+		{ !!openStoryId && <Story /> }
 
 	</main>
 }

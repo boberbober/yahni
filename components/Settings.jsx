@@ -6,10 +6,10 @@ import produce from 'immer'
 import { settingsAtom } from '../utils/atoms'
 
 
-const THEMES = [
-	['hn', 'HackerNews'],
-	['solarized', 'Solarized']
-]
+// const THEMES = [
+// 	['hn', 'HackerNews'],
+// 	['solarized', 'Solarized']
+// ]
 
 const DARKMODE = [
 	['auto', 'auto'],

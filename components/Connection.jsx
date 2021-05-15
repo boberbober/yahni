@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil'
 import cn from 'classnames'
 
 import Symbol from './Symbol'
+
 import { 
 	dbConnectedAtom,
 	settingsAtom
@@ -27,13 +28,16 @@ export default function Connection() {
 		/>
 
 		<div id='connTooltip'>
+
 			<span id='connStatus'>
 				{ dbConnected === null && 'connecting...' }
 				{ dbConnected === true && 'connected' }
 				{ dbConnected === false && 'disconnected' }
 			</span>
+
 			{ (dbConnected && liveUpdates) &&
 				<span id='connLiveStatus'>live updates</span> }
+
 		</div>
 
 	</div>
