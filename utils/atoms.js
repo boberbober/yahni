@@ -32,7 +32,6 @@ const storageEffect = (
 	if (trigger === 'get') {
 		const savedValue = loadFromStorage(storageKey)
 		if (savedValue !== null) {
-			console.log(savedValue)
 			setSelf(handleSavedVal(savedValue))
 		}
 	}
@@ -89,16 +88,15 @@ export const newestFirstAtom = atomFamily({
 	effects_UNSTABLE: key => [storageEffect('newestFirst', key)]
 })
 
-export const lastMaxItemSelector = selector({
-	key: 'lastMaxItem',
+export const lastVisitSelector = selector({
+	key: 'lastVisit',
 	default: null,
 	get: () => {
-		let lastMaxItem = null
+		let lastVisit
 		try {
-			const storageItem = localStorage.getItem('lastMaxItem')
-			lastMaxItem = !!storageItem && parseInt(storageItem)
-		} catch (error) { console.error(error) }
-		return lastMaxItem || null
+			lastVisit = parseInt(localStorage.getItem('lastVisit'))
+		} catch {}
+		return lastVisit || null
 	},
 })
 

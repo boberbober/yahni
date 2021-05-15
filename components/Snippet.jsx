@@ -8,11 +8,11 @@ import Time from './Time'
 import fetchItem from '../utils/fetchItem'
 
 import { 
-	lastMaxItemSelector, 
 	openStoryIdAtom, 
 	settingsAtom,
 	openedStorySelector,
 	storyAtom,
+	lastVisitSelector,
 } from '../utils/atoms'
 
 const urlDomain = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
@@ -20,7 +20,7 @@ const urlDomain = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 
 export default function Snippet({ storyId }) {
 
-	const lastMaxItem = useRecoilValue(lastMaxItemSelector)
+	const lastVisit = useRecoilValue(lastVisitSelector)
 	const [story, setStory] = useRecoilState(storyAtom(storyId))
 	const openStoryId = useRecoilValue(openStoryIdAtom)
 	const { linkNewTab, hideStoryItems } = useRecoilValue(settingsAtom)
@@ -49,7 +49,7 @@ export default function Snippet({ storyId }) {
 	
 	return <li 
 		className={cn(`snippet s-${story.type}`, {
-			sNew: lastMaxItem < storyId,
+			sNew: !!lastVisit && lastVisit < story.time,
 			sOpen: openStoryId === storyId,
 			noScore: hideStoryItems.score,
 			noComments: hideStoryItems.comments,

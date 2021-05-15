@@ -20,11 +20,9 @@ export default function Updates() {
 	const { liveUpdates } = useRecoilValue(settingsAtom)
 
 	const handleUpdate = useRecoilCallback(({ snapshot, set }) => async snap => {
-		
 		const update = snap.val()
 		if (!update?.items?.length)
 			return
-		
 		Promise.all(Object.entries(PAGES).map(([type]) => snapshot.getPromise(storiesAtom(type))))
 			.then(pageStories => pageStories.flat())
 			.then(allStories => {

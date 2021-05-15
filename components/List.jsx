@@ -48,17 +48,12 @@ export default function Stories({ type }) {
 	
 	React.useEffect(() => {
 
-		if (!dbConnected || !db || !liveUpdates) 
-			return
+		if (!dbConnected || !db) return
 
-		async function setLastMaxItem() {
-			try {
-				const maxitem = await db.child('/maxitem').once('value')
-				localStorage.setItem('lastMaxItem', maxitem.val())
-			} catch (error) { console.error(error) }
-		}
-		setLastMaxItem()
-
+		try {
+			localStorage.setItem('lastVisit', Math.round(Date.now() / 1000))
+		} catch {}
+		
 		const handleUpdate = snap => {
 			// story ids from /new API endpoint appear on the list before the item details are available so we wait a little to fetch them 
 			const stories = snap.val()
@@ -69,9 +64,13 @@ export default function Stories({ type }) {
 				setTimeout(() => setStories(stories), 12000)
 			}
 		}
-		db.child(`/${type}stories`).on('value', handleUpdate)
 
-		return () => db.child(`/${type}stories`).off()
+		if (liveUpdates) {
+			db.child(`/${type}stories`).on('value', handleUpdate)
+			return () => db.child(`/${type}stories`).off()
+		}
+
+		db.child(`/${type}stories`).once('value', handleUpdate)
 
 	}, [dbConnected, liveUpdates])
 
