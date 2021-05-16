@@ -79,7 +79,7 @@ export default function Story() {
 		{ story.text &&
 			<UserText className='storyText' text={story.text} /> }
 
-		{ story.type !== 'job' && <h4>
+		{ story.type !== 'job' && <h4 id='storyCommentCount'>
 			{ !story.descendants ? "no comments"
 				: story.descendants > 1 
 				? `${story.descendants} comments` 

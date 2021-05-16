@@ -41,8 +41,6 @@ export default function StoriesList({ type }) {
 		{ debounce: 200, offset: 100, triggerOnNoScroll: false }
 	)
 
-	// console.log('List render', dbConnected)
-
 	const nextPage = () => {
 		const nextEnd = end + STORIESPERPAGE
 		if (end > total) return
