@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { Helmet } from 'react-helmet'
 import { useRouter } from 'next/router'
@@ -17,17 +17,18 @@ import {
 	storiesSelector, 
 	openStoryIdAtom,
 	settingsAtom,
+	storiesStatsSelector,
 } from '../utils/atoms'
 
 const STORIESPERPAGE = 50
 
 
-export default function Stories({ type }) {
+export default function StoriesList({ type }) {
 
 	const { title } = PAGES[type]
 	const dbConnected = useRecoilValue(dbConnectedAtom)
-	const [stories, setStories] = useRecoilState(storiesAtom(type))
-	const storiesLen = stories.length
+	const setStories = useSetRecoilState(storiesAtom(type))
+	const { total } = useRecoilValue(storiesStatsSelector(type))
 	const [end, setEnd] = React.useState(STORIESPERPAGE)
 	const [newestFirst, setNewestFirst] = useRecoilState(newestFirstAtom(type))
 	const selectedStories = useRecoilValue(storiesSelector({ type, start: 0, end }))
@@ -40,9 +41,11 @@ export default function Stories({ type }) {
 		{ debounce: 200, offset: 100, triggerOnNoScroll: false }
 	)
 
+	// console.log('List render', dbConnected)
+
 	const nextPage = () => {
 		const nextEnd = end + STORIESPERPAGE
-		if (end > storiesLen) return
+		if (end > total) return
 		setEnd(nextEnd)
 	}
 	
@@ -50,9 +53,11 @@ export default function Stories({ type }) {
 
 		if (!dbConnected || !db) return
 
-		try {
-			localStorage.setItem('lastVisit', Math.round(Date.now() / 1000))
-		} catch {}
+		setTimeout(() => {
+			try {
+				localStorage.setItem('lastVisit', Math.round(Date.now() / 1000))
+			} catch {}
+		}, 5000)
 		
 		const handleUpdate = snap => {
 			// story ids from /new API endpoint appear on the list before the item details are available so we wait a little to fetch them 
@@ -94,13 +99,13 @@ export default function Stories({ type }) {
 
 		<div id='Stories' ref={scrollRef}>
 
-			{ (!dbConnected && !storiesLen) &&
+			{ (!dbConnected && !total) &&
 				<p><span className='loading'>Connecting...</span></p> }
 			
-			{ (dbConnected && !storiesLen) &&
+			{ (dbConnected && !total) &&
 				<p><span className='loading'>Loading stories...</span></p> }
 
-			{ (!!storiesLen && ['top', 'best', 'ask', 'show'].includes(type)) && 
+			{ (!!total && ['top', 'best', 'ask', 'show'].includes(type)) && 
 				<label className='newestFirst'>
 					<input type='checkbox'
 						onChange={event => setNewestFirst(event.target.checked)}
@@ -113,7 +118,7 @@ export default function Stories({ type }) {
 				{ selectedStories.map(id => <Snippet key={id} storyId={id} /> )}
 			</ul>
 
-			{ (!infiniteScroll && storiesLen > 0 && end < storiesLen) &&
+			{ (!infiniteScroll && total > 0 && end < total) &&
 				<button id='moreStoriesButton'
 					onClick={nextPage}
 				>
@@ -121,7 +126,7 @@ export default function Stories({ type }) {
 				</button> 
 			}
 
-			{ (storiesLen > 0 && end >= storiesLen) &&
+			{ (total > 0 && end >= total) &&
 				<p id='storiesEnd'>end</p> }
 
 		</div>

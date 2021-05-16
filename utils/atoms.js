@@ -82,6 +82,15 @@ export const storiesSelector = selectorFamily({
 	}
 })
 
+export const storiesStatsSelector = selectorFamily({
+	key: 'storiesStats',
+	default: { total: 0 },
+	get: type => ({ get }) => {
+		const stories = get(storiesAtom(type))
+		return { total: stories.length }
+	}
+})
+
 export const newestFirstAtom = atomFamily({
 	key: 'newestFirst',
 	default: false,
@@ -95,6 +104,7 @@ export const lastVisitSelector = selector({
 		let lastVisit
 		try {
 			lastVisit = parseInt(localStorage.getItem('lastVisit'))
+			// lastVisit = lastVisit - 7200
 		} catch {}
 		return lastVisit || null
 	},
