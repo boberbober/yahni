@@ -78,7 +78,7 @@ export default function StoriesList({ type }) {
 	}, [dbConnected, liveUpdates])
 
 	React.useEffect(() => {
-		const anchorMatch = asPath.match(/#(\d{8})$/)
+		const anchorMatch = asPath.match(/#(\d+)$/)
 		const anchorId = parseInt(anchorMatch?.[1])
 		if (anchorId) {
 			setOpenStoryId(anchorId)

@@ -3,6 +3,7 @@ import React from 'react'
 import { useSetRecoilState, useRecoilState } from 'recoil'
 
 import Comment from './Comment'
+import Pollopt from './Pollopt'
 import Time from './Time'
 import UserText from './UserText'
 import fetchItem from '../utils/fetchItem'
@@ -78,6 +79,12 @@ export default function Story() {
 
 		{ story.text &&
 			<UserText className='storyText' text={story.text} /> }
+
+		{ (story.type === 'poll' && !!story.parts) &&
+			<ul id='storyPoll'>
+				{ story.parts.map(id => <Pollopt key={id} polloptId={id} /> )}
+			</ul>
+		}
 
 		{ story.type !== 'job' && <h4 id='storyCommentCount'>
 			{ !story.descendants ? "no comments"

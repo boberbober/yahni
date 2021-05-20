@@ -111,6 +111,15 @@ export const lastVisitSelector = selector({
 })
 
 
+// Poll options
+
+export const polloptAtom = atomFamily({
+	key: 'pollopt',
+	default: null
+})
+
+
+
 // Opened stories
 
 export const openedStoriesAtom = atom({
