@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import Snippet from './Snippet'
 import Story from './Story'
 import { db } from '../utils/firebase'
-import PAGES from '../utils/pages'
+import { PAGES, STORIES_PER_PAGE } from '../utils/config'
 
 import { 
 	storiesAtom, 
@@ -20,7 +20,6 @@ import {
 	storiesStatsSelector,
 } from '../utils/atoms'
 
-const STORIESPERPAGE = 50
 
 
 export default function StoriesList({ type }) {
@@ -29,7 +28,7 @@ export default function StoriesList({ type }) {
 	const dbConnected = useRecoilValue(dbConnectedAtom)
 	const setStories = useSetRecoilState(storiesAtom(type))
 	const { total } = useRecoilValue(storiesStatsSelector(type))
-	const [end, setEnd] = React.useState(STORIESPERPAGE)
+	const [end, setEnd] = React.useState(STORIES_PER_PAGE)
 	const [newestFirst, setNewestFirst] = useRecoilState(newestFirstAtom(type))
 	const selectedStories = useRecoilValue(storiesSelector({ type, start: 0, end }))
 	const [openStoryId, setOpenStoryId] = useRecoilState(openStoryIdAtom)
@@ -41,10 +40,8 @@ export default function StoriesList({ type }) {
 		{ debounce: 200, offset: 100, triggerOnNoScroll: false }
 	)
 
-	console.log('total', total)
-
 	const nextPage = () => {
-		const nextEnd = end + STORIESPERPAGE
+		const nextEnd = end + STORIES_PER_PAGE
 		if (end > total) return
 		setEnd(nextEnd)
 	}
@@ -75,7 +72,7 @@ export default function StoriesList({ type }) {
 			return () => db.child(`/${type}stories`).off()
 		}
 
-		// db.child(`/${type}stories`).once('value', handleUpdate)
+		db.child(`/${type}stories`).once('value', handleUpdate)
 
 	}, [dbConnected, liveUpdates])
 
@@ -99,11 +96,11 @@ export default function StoriesList({ type }) {
 
 		<div id='Stories' ref={scrollRef}>
 
-			{/* { (!dbConnected && !total) &&
+			{ (!dbConnected && !total) &&
 				<p><span className='loading'>Connecting...</span></p> }
 			
 			{ (dbConnected && !total) &&
-				<p><span className='loading'>Loading stories...</span></p> } */}
+				<p><span className='loading'>Loading stories...</span></p> }
 
 			{ (!!total && ['top', 'best', 'ask', 'show'].includes(type)) && 
 				<label className='newestFirst'>

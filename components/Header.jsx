@@ -6,7 +6,7 @@ import NavLink from './NavLink'
 import Settings from './Settings'
 import Symbol from './Symbol'
 import Connection from './Connection'
-import PAGES from '../utils/pages'
+import { PAGES } from '../utils/config'
 
 
 export default function Header() {

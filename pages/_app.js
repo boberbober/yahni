@@ -15,24 +15,18 @@ import '../styles/layout.sass'
 import { 
 	storiesAtom, 
 	storyAtom, 
-	dbConnectedAtom, 
-	newestFirstAtom, 
-	storiesSelector, 
-	openStoryIdAtom,
-	settingsAtom,
-	storiesStatsSelector,
 } from '../utils/atoms'
 
 
 export default function AppWrap({ Component, pageProps }) {
 
-	console.log(pageProps)
-
 	function initializeState({ set }) {
-		if (!!pageProps.stories)
+		
+		if (!!pageProps.stories && pageProps.type)
 			set(storiesAtom(pageProps.type), pageProps.stories)
+		
 		if (!!pageProps.snippets) {
-			for (const snippet of pageProps.snippets ) {
+			for (const snippet of pageProps.snippets) {
 				set(storyAtom(snippet.id), snippet)
 			}
 		}

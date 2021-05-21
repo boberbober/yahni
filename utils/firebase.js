@@ -9,17 +9,10 @@ import { dbConnectedAtom } from './atoms'
 
 let db
 
-
-;(function() {
-
-	if (!firebase.apps.length) {
-		console.log('init firebase')
-		firebase.initializeApp({ databaseURL: 'https://hacker-news.firebaseio.com' })
-		// firebase.database().ref('.info/connected').on('value', connectedListener)
-		db = firebase.database().ref('/v0')
-	}
-
-})()
+if (!firebase.apps.length) {
+	firebase.initializeApp({ databaseURL: 'https://hacker-news.firebaseio.com' })
+	db = firebase.database().ref('/v0')
+}
 
 
 function FirebaseProvider() {
@@ -29,11 +22,7 @@ function FirebaseProvider() {
 	const connectedListener = React.useCallback(snap => setConnected(!!snap.val()), [])
 
 	React.useEffect(() => {
-		// if (!firebase.apps.length) {
-			// firebase.initializeApp({ databaseURL: 'https://hacker-news.firebaseio.com' })
 		firebase.database().ref('.info/connected').on('value', connectedListener)
-			// db = firebase.database().ref('/v0')
-		// }
 		return () => firebase.database().ref(`.info/connected`).off()
 	}, [])
 
