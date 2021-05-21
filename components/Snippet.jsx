@@ -67,7 +67,7 @@ export default function Snippet({ storyId }) {
 
 			{ !hideStoryItems.comments &&
 				<Link href={`#${storyId}`}>
-					<a className={cn('sComments', { 
+					<a className={cn('sComments', {
 							scOpened: !!openedStory,
 							scHasNew: openedStory?.desc < story.descendants,
 						})}

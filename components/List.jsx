@@ -41,6 +41,8 @@ export default function StoriesList({ type }) {
 		{ debounce: 200, offset: 100, triggerOnNoScroll: false }
 	)
 
+	console.log('total', total)
+
 	const nextPage = () => {
 		const nextEnd = end + STORIESPERPAGE
 		if (end > total) return
@@ -73,7 +75,7 @@ export default function StoriesList({ type }) {
 			return () => db.child(`/${type}stories`).off()
 		}
 
-		db.child(`/${type}stories`).once('value', handleUpdate)
+		// db.child(`/${type}stories`).once('value', handleUpdate)
 
 	}, [dbConnected, liveUpdates])
 
@@ -97,11 +99,11 @@ export default function StoriesList({ type }) {
 
 		<div id='Stories' ref={scrollRef}>
 
-			{ (!dbConnected && !total) &&
+			{/* { (!dbConnected && !total) &&
 				<p><span className='loading'>Connecting...</span></p> }
 			
 			{ (dbConnected && !total) &&
-				<p><span className='loading'>Loading stories...</span></p> }
+				<p><span className='loading'>Loading stories...</span></p> } */}
 
 			{ (!!total && ['top', 'best', 'ask', 'show'].includes(type)) && 
 				<label className='newestFirst'>

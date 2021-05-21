@@ -12,9 +12,33 @@ import Header from '../components/Header'
 import '../styles/layout.sass'
 
 
+import { 
+	storiesAtom, 
+	storyAtom, 
+	dbConnectedAtom, 
+	newestFirstAtom, 
+	storiesSelector, 
+	openStoryIdAtom,
+	settingsAtom,
+	storiesStatsSelector,
+} from '../utils/atoms'
+
+
 export default function AppWrap({ Component, pageProps }) {
 
-	return <RecoilRoot>
+	console.log(pageProps)
+
+	function initializeState({ set }) {
+		if (!!pageProps.stories)
+			set(storiesAtom(pageProps.type), pageProps.stories)
+		if (!!pageProps.snippets) {
+			for (const snippet of pageProps.snippets ) {
+				set(storyAtom(snippet.id), snippet)
+			}
+		}
+	}
+
+	return <RecoilRoot initializeState={initializeState}>
 
 		<Helmet 
 			defer={false}

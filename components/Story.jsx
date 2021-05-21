@@ -1,6 +1,7 @@
 
 import React from 'react'
 import { useSetRecoilState, useRecoilState } from 'recoil'
+import { useRouter } from 'next/router'
 
 import Comment from './Comment'
 import Pollopt from './Pollopt'
@@ -22,6 +23,7 @@ export default function Story() {
 	const setOpenedStory = useSetRecoilState(openedStorySelector(storyId))
 	const [story, setStory] = useRecoilState(storyAtom(storyId))
 	const ref = React.useRef(null)
+	const { push } = useRouter()
 
 	React.useEffect(() => {
 		if (story === null)
@@ -37,7 +39,7 @@ export default function Story() {
 		if (ref.current)
 			ref.current.scrollTop = 0
 	}, [storyId])
-	
+
 	if (!story) { 
 		return <div id='Story'>
 			<span className='loading'>Loading...</span>
@@ -47,7 +49,7 @@ export default function Story() {
 	return <div id='Story' ref={ref}>
 
 		<button id='storyCloseButton'
-			onClick={() => setOpenStoryId(null)}
+			onClick={() => push(`${window.location.pathname}`)}
 		>
 			close
 		</button>
