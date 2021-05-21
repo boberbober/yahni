@@ -18,8 +18,8 @@ import {
 	openStoryIdAtom,
 	settingsAtom,
 	storiesStatsSelector,
+	loadFromStorage, // dirty hydration 'newestFirst' fix
 } from '../utils/atoms'
-
 
 
 export default function StoriesList({ type }) {
@@ -86,9 +86,14 @@ export default function StoriesList({ type }) {
 		}
 	}, [asPath])
 
-	return <main id='StoriesPage' 
-		className={!!openStoryId ? 'storyOpened' : 'storyClosed'}
-	>
+	// 'newesetFirst' hydration mismatch fix:
+	React.useEffect(() => {
+		const storageNewestFirst = loadFromStorage(`newestFirst_${type}`)
+		if (!!storageNewestFirst && !newestFirst)
+			setNewestFirst(true)
+	}, [type])
+
+	return <main id='StoriesPage'	className={!!openStoryId ? 'storyOpened' : 'storyClosed'}>
 
 		<Helmet>
 			<title>{title}</title>

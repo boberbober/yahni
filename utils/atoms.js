@@ -7,7 +7,7 @@ import DEFAULTSETTINGS from '../utils/defaultSettings'
 
 // localStorage effect
 
-function loadFromStorage(key) {
+export function loadFromStorage(key) {
 	try {
 		const storageItem = localStorage.getItem(key)
 		const storageObject = JSON.parse(storageItem)
@@ -29,7 +29,7 @@ const storageEffect = (
 
 	const storageKey = `${prefix}_${key}`
 
-	if (trigger === 'get') {
+	if (trigger === 'get' && !storageKey.startsWith('newestFirst')) {
 		const savedValue = loadFromStorage(storageKey)
 		if (savedValue !== null) {
 			setSelf(handleSavedVal(savedValue))
@@ -74,11 +74,9 @@ export const storiesSelector = selectorFamily({
 	default: [],
 	get: ({ type, start, end }) => ({ get }) => {
 		const stories = get(storiesAtom(type))
-		const newestFirst = get(newestFirstAtom(type))
-		if (!newestFirst)
-			return stories.slice(start, end)
-		const sortedStories = stories.slice().sort((a, b) => b - a)
-		return sortedStories.slice(start, end)
+		return get(newestFirstAtom(type))
+			? stories.slice().sort((a, b) => b - a).slice(start, end)
+			: stories.slice(start, end)
 	}
 })
 

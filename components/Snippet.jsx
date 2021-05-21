@@ -46,7 +46,7 @@ export default function Snippet({ storyId }) {
 				</p> }
 		</li>
 	}
-	
+
 	return <li 
 		className={cn(`snippet s-${story.type}`, {
 			sNew: !!lastVisit && lastVisit < story.time,
@@ -78,14 +78,15 @@ export default function Snippet({ storyId }) {
 		</>}
 
 
-		{ story.url
-			?	<a className='sLink'
+		{ !!story.url
+			?	<a key={storyId} className='sLink'
 					target={linkNewTab ? '_blank' : '_self'}
 					rel='noopener'
-					href={story.url ?? `https://news.ycombinator.com/item?id=${storyId}`}
+					href={story.url}
 				>
 					<span className='sTitle'>{ story.title }</span>
-					{ (story.url && !hideStoryItems.domain) && <small className='sUrl'>({ urlDomain(story.url) })</small> }
+					{ (story.url && !hideStoryItems.domain) && 
+						<small className='sUrl'>({ urlDomain(story.url) })</small> }
 				</a>
 			:	<Link href={`#${storyId}`}>
 					<a className='sLink'>{ story.title }</a>

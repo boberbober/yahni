@@ -7,15 +7,13 @@ import { useSetRecoilState } from 'recoil'
 import { dbConnectedAtom } from './atoms'
 
 
-let db
-
-if (!firebase.apps.length) {
+if (!firebase.apps.length)
 	firebase.initializeApp({ databaseURL: 'https://hacker-news.firebaseio.com' })
-	db = firebase.database().ref('/v0')
-}
+
+export const db = firebase.database().ref('/v0')
 
 
-function FirebaseProvider() {
+export function FirebaseProvider() {
 
 	const setConnected = useSetRecoilState(dbConnectedAtom)
 
@@ -28,6 +26,3 @@ function FirebaseProvider() {
 
 	return null
 }
-
-
-export { FirebaseProvider, db }

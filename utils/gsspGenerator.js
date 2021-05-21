@@ -3,7 +3,6 @@ import { db } from './firebase'
 import { STORIES_PER_PAGE } from './config'
 
 
-
 export default function getServerSidePropsGenerator(type) { return async function({ req }) {
 
 	let stories = null
@@ -12,7 +11,7 @@ export default function getServerSidePropsGenerator(type) { return async functio
 	// Next calls getServerSideProps on every route changed with <Link> and we don't need that.
 	if (!req.url.startsWith('/_next')) {
 		try {
-		
+
 			const snap = await db.child(`/${type}stories`).once('value')
 			stories = snap.val()
 
