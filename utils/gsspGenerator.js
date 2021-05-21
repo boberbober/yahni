@@ -10,7 +10,7 @@ export default function getServerSidePropsGenerator(type) { return async functio
 	let snippets = null
 	
 	// Next calls getServerSideProps on every route changed with <Link> and we don't need that.
-	if (req.url.startsWith('/_next')) {
+	if (!req.url.startsWith('/_next')) {
 		try {
 		
 			const snap = await db.child(`/${type}stories`).once('value')
