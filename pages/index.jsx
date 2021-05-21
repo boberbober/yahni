@@ -9,5 +9,4 @@ export default function TopStories({ stories, snippets }) {
 	return <List type='top' />
 }
 
-
 export const getServerSideProps = getServerSidePropsGenerator('top')
