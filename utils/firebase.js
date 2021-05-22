@@ -13,7 +13,7 @@ if (!firebase.apps.length)
 export const db = firebase.database().ref('/v0')
 
 
-export function FirebaseProvider() {
+export function FirebaseUpdater() {
 
 	const setConnected = useSetRecoilState(dbConnectedAtom)
 

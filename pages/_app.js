@@ -3,8 +3,8 @@ import React from 'react'
 import { RecoilRoot } from 'recoil'
 import { Helmet } from 'react-helmet'
 
-import { FirebaseProvider } from '../utils/firebase'
-import SettingsListener from '../utils/SettingsListener'
+import { FirebaseUpdater } from '../utils/firebase'
+import SettingsUpdater from '../utils/SettingsUpdater'
 import Updates from '../utils/Updates'
 import Sprite from '../utils/Sprite'
 import Header from '../components/Header'
@@ -45,14 +45,14 @@ export default function AppWrap({ Component, pageProps }) {
 			<link rel='mask-icon' href='/favicon.svg' />
 		</Helmet>
 
-		<FirebaseProvider />
-		<SettingsListener />
-		<Updates />
-
 		<Header />
 		<Component {...pageProps} />
 
 		<Sprite />
+
+		<FirebaseUpdater />
+		<SettingsUpdater />
+		<Updates />
 
 	</RecoilRoot>
 }

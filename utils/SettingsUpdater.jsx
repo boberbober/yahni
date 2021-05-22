@@ -1,13 +1,14 @@
 
 import React from 'react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 
-import { settingsAtom } from '../utils/atoms'
+import { settingsAtom, lastVisitAtom } from '../utils/atoms'
 
 
-export default function SettingsProvider() {
+export default function SettingsUpdater() {
 
 	const settings = useRecoilValue(settingsAtom)
+	const setLastVisit = useSetRecoilState(lastVisitAtom)
 
 	React.useEffect(() => {
 
@@ -27,6 +28,15 @@ export default function SettingsProvider() {
 		return () => mql.removeEventListener('change', setBodyTheme)
 
 	}, [settings.theme, settings.darkMode])
+
+
+	React.useEffect(() => {
+		let lastVisit
+		try {
+			lastVisit = parseInt(localStorage.getItem('lastVisit'))
+		} catch {}
+		setLastVisit(lastVisit || null)
+	}, [])
 	
 	return null
 }

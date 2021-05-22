@@ -1,5 +1,5 @@
 
-import { atom, selector, selectorFamily, atomFamily, DefaultValue } from 'recoil'
+import { atom, selectorFamily, atomFamily, DefaultValue } from 'recoil'
 import produce from 'immer'
 
 import DEFAULTSETTINGS from '../utils/defaultSettings'
@@ -95,17 +95,9 @@ export const newestFirstAtom = atomFamily({
 	effects_UNSTABLE: key => [storageEffect('newestFirst', key)]
 })
 
-export const lastVisitSelector = selector({
+export const lastVisitAtom = atom({
 	key: 'lastVisit',
 	default: null,
-	get: () => {
-		let lastVisit
-		try {
-			lastVisit = parseInt(localStorage.getItem('lastVisit'))
-			// lastVisit = lastVisit - 7200
-		} catch {}
-		return lastVisit || null
-	},
 })
 
 

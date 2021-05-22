@@ -12,7 +12,7 @@ import {
 	settingsAtom,
 	openedStorySelector,
 	storyAtom,
-	lastVisitSelector,
+	lastVisitAtom,
 } from '../utils/atoms'
 
 const urlDomain = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
@@ -20,7 +20,7 @@ const urlDomain = url => url.replace(/^(https?:\/\/(www\.)?)|(\/.*$)/g, '')
 
 export default function Snippet({ storyId }) {
 
-	const lastVisit = useRecoilValue(lastVisitSelector)
+	const lastVisit = useRecoilValue(lastVisitAtom)
 	const [story, setStory] = useRecoilState(storyAtom(storyId))
 	const openStoryId = useRecoilValue(openStoryIdAtom)
 	const { linkNewTab, hideStoryItems } = useRecoilValue(settingsAtom)
@@ -106,6 +106,8 @@ export default function Snippet({ storyId }) {
 						by <em>{ story.by }</em>
 					</span>
 				}
+
+				last: <Time time={ lastVisit } />
 
 			</p>
 		}
