@@ -107,8 +107,6 @@ export default function Snippet({ storyId }) {
 					</span>
 				}
 
-				last: <Time time={ lastVisit } />
-
 			</p>
 		}
 
