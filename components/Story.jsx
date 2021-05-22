@@ -54,7 +54,7 @@ export default function Story() {
 			close
 		</button>
 
-		<h1>{ story.title }</h1>
+		<h1 className='storyTitle'>{ story.title }</h1>
 
 		{ story.url &&
 			<a className='storyLink'

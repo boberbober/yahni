@@ -101,11 +101,9 @@ export default function Snippet({ storyId }) {
 					<Time time={story.time} />{' '}
 				</>}
 
-				{ !hideStoryItems.user &&
-					<span className='sBy'>
-						by <em>{ story.by }</em>
-					</span>
-				}
+				{ !hideStoryItems.user && <>
+					by <em className='sBy'>{ story.by }</em>
+				</> }
 
 			</p>
 		}

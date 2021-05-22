@@ -9,7 +9,7 @@ export default function Time({ time }) {
 
 	const dayTime = dayjs.unix(time)
 
-	return <time dateTime={dayTime.toISOString()}>
+	return <time dateTime={dayTime.toISOString()} className='time'>
 		{ dayTime.fromNow() }
 	</time>
 }

@@ -13,7 +13,7 @@ header
 #logo
 	margin-right: 1.5em
 	color: var(--textColor) !important
-	border: 1px solid currentColor
+	border: 1px solid var(--subTextColor)
 	padding: .25em .4em
 	font-size: small
 	&:focus,
@@ -33,7 +33,8 @@ nav
 	&:active
 		color: var(--linkColor) !important
 	&.selected
-		color: var(--activeColor) !important
+		// color: var(--activeColor) !important
+		color: var(--linkColor) !important
 
 
 #aboutLink
@@ -65,9 +66,9 @@ nav
 	&.connConnecting
 		color: var(--linkColor)
 	&.connDisconnected
-		color: black
+		color: var(--subTextColor)
 	&.connLive
-		color: var(--activeColor)
+		color: var(--newColor)
 	
 #connTooltip
 	display: none
