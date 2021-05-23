@@ -32,7 +32,9 @@ export default function Header() {
 		<Connection />
 
 		<Link href='/about'>
-			<a id='aboutLink'>About</a>
+			<a id='aboutLink'>
+				<Symbol id='info' /><span>About</span>
+			</a>
 		</Link>
 
 		<button 

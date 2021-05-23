@@ -37,18 +37,6 @@ nav
 		color: var(--linkColor) !important
 
 
-#aboutLink
-	margin-left: 1em
-	font-size: small
-
-#settingsButton
-	display: flex
-	align-items: center
-	margin-left: 1em
-	svg
-		display: none
-		margin-right: .25em
-
 
 // Connection
 
@@ -88,3 +76,50 @@ nav
 
 #connStatus
 	font-variant: small-caps
+
+
+
+
+#aboutLink
+	margin-left: 1em
+	font-size: small
+	display: flex
+	svg
+		display: none
+
+#settingsButton
+	display: flex
+	align-items: center
+	margin-left: 1em
+	svg
+		display: none
+
+@media (max-width: 600px)
+	#aboutLink,
+	#settingsButton
+		svg
+			display: inline-block
+		span
+			display: none
+	
+@media (max-width: 550px)
+	#logo
+		display: none
+
+@media (max-width: 450px)
+	.navLink
+		font-size: small
+
+@media (max-width: 400px)
+	header
+		justify-content: center
+	#logo
+		display: inline-block
+		margin-right: auto
+	nav
+		order: 10
+		width: 100%
+		justify-content: space-between
+		margin-top: .5em
+		.navLink
+			margin: .5em

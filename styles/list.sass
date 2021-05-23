@@ -8,9 +8,9 @@
 		grid-template-columns: 1fr 1fr
 
 @media (max-width: 1023px)
-	#MainStories
+	#StoriesPage
 		grid-template-columns: 1fr !important
-	#StoryPage
+	#Story
 		grid-area: 1 / 1 / 2 / 2
 		z-index: 10
 
@@ -25,6 +25,9 @@
 	flex-direction: column
 	--numColWidth: 2.5em
 	--colGap: 1em
+	@media (max-width: 376px)
+		--numColWidth: 2em
+	--colGap: .75em
 
 .newestFirst
 	margin-bottom: 1em
