@@ -1,6 +1,6 @@
 
 
-# Yet Another Hacker News Interface
+## Yet Another Hacker News Interface
 
 * Built with NextJS 10.1
 * Data is fetched from the [HackerNews Firebase API](https://github.com/HackerNews/API) on both server and client side
